@@ -1,3 +1,12 @@
+Requirements
+===========
+
+pocketsphinx	
+gstreamer (and what ever plugin has pocket sphinx support)
+pyside 
+
+0. move commands.tmp to commands and fill the file with sentences and command to run
+
 1. Run blather.py, this will generate a 'sentences.corpus' file based on sentences in the 'commands' file
 2. quit blather (there is a good chance it will just segfault)
 3. go to http://www.speech.cs.cmu.edu/tools/lmtool-new.html and upload the sentences.corpus file
