@@ -1,0 +1,8 @@
+1. Run blather.py, this will generate a 'sentences.corpus' file based on sentences in the 'commands' file
+2. quit blather (there is a good chance it will just segfault)
+3. go to http://www.speech.cs.cmu.edu/tools/lmtool-new.html and upload the sentences.corpus file
+4. download the resulting XXXX.lm file to the 'language' directory and rename to file to 'lm'
+5. download the resulting XXXX.dic file to the 'language' directory and rename to file to 'dic'
+6. run blather.py
+7. start talking
+
