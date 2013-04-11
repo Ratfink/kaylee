@@ -1,4 +1,6 @@
 #!/usr/bin/env python2
+import pygst
+pygst.require('0.10')
 import gst
 import subprocess
 import os.path
