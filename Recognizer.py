@@ -13,7 +13,7 @@ lang_dir = os.path.join(this_dir, "language")
 command_file = os.path.join(this_dir, "commands")
 strings_file = os.path.join(this_dir, "sentences.corpus")
 
-class TTS(gobject.GObject):
+class Recognizer(gobject.GObject):
 	__gsignals__ = {
 		'finished' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_BOOLEAN,))
 	}
@@ -73,8 +73,8 @@ class TTS(gobject.GObject):
 		strings.close()
 
 if __name__ == "__main__":
-	tts = TTS()
-	tts.listen()
+	recognizer = Recognizer()
+	recognizer.listen()
 	main_loop = gobject.MainLoop()
 	#start the main loop
 	try:

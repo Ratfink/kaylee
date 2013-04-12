@@ -6,12 +6,12 @@ import gobject
 from PySide.QtCore import Signal, Qt
 from PySide.QtGui import QApplication, QWidget, QMainWindow, QVBoxLayout
 from PySide.QtGui import QLabel, QPushButton, QCheckBox
-from TTS import TTS
+from Recognizer import Recognizer
 
 class Blather:
 	def __init__(self):
-		self.tts = TTS();
-		self.tts.connect('finished',self.tts_finished)
+		self.recognizer = Recognizer();
+		self.recognizer.connect('finished',self.recognizer_finished)
 		#make a window
 		self.window = QMainWindow()
 		center = QWidget()
@@ -30,7 +30,7 @@ class Blather:
 		self.lsbutton.clicked.connect(self.lsbutton_clicked)
 		self.ccheckbox.clicked.connect(self.ccheckbox_clicked)
 	
-	def tts_finished(self, x, y):
+	def recognizer_finished(self, x, y):
 		if self.ccheckbox.isChecked():
 			pass
 		else:
@@ -42,19 +42,19 @@ class Blather:
 		if checked:
 			#disable lsbutton
 			self.lsbutton.setEnabled(False)
-			self.tts.listen()
+			self.recognizer.listen()
 		else:
 			self.lsbutton.setEnabled(True)
 	
 	def lsbutton_stopped(self):
-		self.tts.pause()
+		self.recognizer.pause()
 		self.lsbutton.setText("Listen")
 		
 	def lsbutton_clicked(self):
 		val = self.lsbutton.text()
 		print val
 		if val == "Listen":
-			self.tts.listen()
+			self.recognizer.listen()
 			self.lsbutton.setText("Stop")
 		else:
 			self.lsbutton_stopped()
