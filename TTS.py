@@ -44,6 +44,7 @@ class TTS(gobject.GObject):
 		self.pipeline.set_state(gst.STATE_PAUSED)
 
 	def result(self, asr, text, uttid):
+		#emit finished
 		self.emit("finished", True)
 		print text
 		#is there a matching command?
@@ -53,8 +54,6 @@ class TTS(gobject.GObject):
 			subprocess.call(cmd, shell=True)
 		else:
 			print "no matching command"
-		#emit finished
-		
 		
 	def read_commands(self):
 		#read the.commands file
@@ -74,8 +73,8 @@ class TTS(gobject.GObject):
 		strings.close()
 
 if __name__ == "__main__":
-	b = Blather()
-	b.listen()
+	tts = TTS()
+	tts.listen()
 	main_loop = gobject.MainLoop()
 	#start the main loop
 	try:
