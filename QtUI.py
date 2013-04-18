@@ -6,14 +6,20 @@ import gobject
 from PySide.QtCore import Signal, Qt
 from PySide.QtGui import QApplication, QWidget, QMainWindow, QVBoxLayout
 from PySide.QtGui import QLabel, QPushButton, QCheckBox
-from Recognizer import Recognizer
 
-class Blather:
-	def __init__(self):
-		self.recognizer = Recognizer();
-		self.recognizer.connect('finished',self.recognizer_finished)
+class UI(gobject.GObject):
+	__gsignals__ = {
+		'command' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING,))
+	}
+	
+	def __init__(self,args):
+		gobject.GObject.__init__(self)
+		#start by making our app
+		self.app = QApplication(args)
 		#make a window
 		self.window = QMainWindow()
+		#give the window a name
+		self.window.setWindowTitle("BlatherQt")
 		center = QWidget()
 		self.window.setCentralWidget(center)
 		
@@ -42,32 +48,35 @@ class Blather:
 		if checked:
 			#disable lsbutton
 			self.lsbutton.setEnabled(False)
-			self.recognizer.listen()
+			self.lsbutton_stopped()
+			self.emit('command', "continuous_listen")
 		else:
 			self.lsbutton.setEnabled(True)
+			self.emit('command', "continuous_stop")
 	
 	def lsbutton_stopped(self):
-		self.recognizer.pause()
 		self.lsbutton.setText("Listen")
 		
 	def lsbutton_clicked(self):
 		val = self.lsbutton.text()
 		print val
 		if val == "Listen":
-			self.recognizer.listen()
+			self.emit("command", "listen")
 			self.lsbutton.setText("Stop")
 		else:
 			self.lsbutton_stopped()
+			self.emit("command", "stop")
 			
 	def run(self):
 		self.window.show()
+		self.app.exec_()
+	
+	def finished(self, text):
+		print text
+		#if the continuous isn't pressed
+		if not self.ccheckbox.isChecked():
+			self.lsbutton_stopped()
 		
-if __name__ == "__main__":
-	app = QApplication(sys.argv)
-	b = Blather()
-	b.run()
-	
-	signal.signal(signal.SIGINT, signal.SIG_DFL)
-	#start the app running
-	sys.exit(app.exec_())
-	
+	def quit(self):
+		#sys.exit()
+		pass
