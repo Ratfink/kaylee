@@ -18,12 +18,25 @@ if not os.path.exists(lang_dir):
 	os.makedirs(lang_dir)
 
 class Blather:
-	def __init__(self):
+	def __init__(self, args):
+		self.ui = None
 		self.continuous_listen = False
 		self.commands = {}
 		self.read_commands()
 		self.recognizer = Recognizer(lang_file, dic_file)
 		self.recognizer.connect('finished',self.recognizer_finished)
+		#is there an arg?
+		if len(args) > 1:
+			if args[1] == "-qt":
+				#import the ui from qt
+				from QtUI import UI
+			elif args[1] == "-gtk":
+				from GtkUI import UI
+			else:
+				print "no GUI defined"
+				sys.exit()
+			self.ui = UI(args)
+			self.ui.connect("command", self.process_command)
 
 	def read_commands(self):
 		#read the.commands file
@@ -60,25 +73,19 @@ class Blather:
 			#let the UI know that there is a finish
 			self.ui.finished(text)
 	
-	def run(self, args):
-		#TODO check for UI request
-		#is there an arg?
-		if len(args) > 1:
-			if args[1] == "-qt":
-				#import the ui from qt
-				from QtUI import UI
-			elif args[1] == "-gtk":
-				from GtkUI import UI
-			else:
-				print "no GUI defined"
-				sys.exit()
-			self.ui = UI(args)
-			self.ui.connect("command", self.process_command)
+	def run(self):
+		if self.ui:
 			self.ui.run()
 		else:
 			blather.recognizer.listen()	
 
+	def quit(self):
+		if self.ui:
+			self.ui.quit()
+		sys.exit()
+
 	def process_command(self, UI, command):
+		print command
 		if command == "listen":
 			self.recognizer.listen()
 		elif command == "stop":
@@ -89,20 +96,26 @@ class Blather:
 		elif command == "continuous_stop":
 			self.continuous_listen = False
 			self.recognizer.pause()
+		elif command == "quit":
+			self.quit()
 		
 if __name__ == "__main__":
 	#make our blather object
-	blather = Blather()
+	blather = Blather(sys.argv)
 	#init gobject threads
 	gobject.threads_init()
 	#we want a main loop
 	main_loop = gobject.MainLoop()
+	#handle sigint
+	signal.signal(signal.SIGINT, signal.SIG_DFL)
 	#run the blather
-	blather.run(sys.argv)
+	blather.run()
 	#start the main loop
+		
 	try:
 		main_loop.run()
 	except:
+		print "time to quit"
 		main_loop.quit()
 		sys.exit()
-	
+		

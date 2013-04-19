@@ -1,6 +1,5 @@
 #!/usr/bin/env python2
 import sys
-import signal
 import gobject
 # Qt stuff
 from PySide.QtCore import Signal, Qt
@@ -35,14 +34,11 @@ class UI(gobject.GObject):
 		#connect the buttonsc
 		self.lsbutton.clicked.connect(self.lsbutton_clicked)
 		self.ccheckbox.clicked.connect(self.ccheckbox_clicked)
+		
+		#add a label to the UI to display the last command
+		self.label = QLabel()
+		layout.addWidget(self.label)
 	
-	def recognizer_finished(self, x, y):
-		if self.ccheckbox.isChecked():
-			pass
-		else:
-			self.lsbutton_stopped()
-			
-			
 	def ccheckbox_clicked(self):
 		checked = self.ccheckbox.isChecked()
 		if checked:
@@ -59,10 +55,11 @@ class UI(gobject.GObject):
 		
 	def lsbutton_clicked(self):
 		val = self.lsbutton.text()
-		print val
 		if val == "Listen":
 			self.emit("command", "listen")
 			self.lsbutton.setText("Stop")
+			#clear the label
+			self.label.setText("")
 		else:
 			self.lsbutton_stopped()
 			self.emit("command", "stop")
@@ -70,12 +67,17 @@ class UI(gobject.GObject):
 	def run(self):
 		self.window.show()
 		self.app.exec_()
+		self.emit("command", "quit")
 	
+	def quit(self):
+		pass
+		
 	def finished(self, text):
 		print text
 		#if the continuous isn't pressed
 		if not self.ccheckbox.isChecked():
 			self.lsbutton_stopped()
+		self.label.setText(text)
 		
 	def quit(self):
 		#sys.exit()
