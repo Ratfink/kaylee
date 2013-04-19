@@ -1,20 +1,23 @@
-Requirements
-===========
+#Blather
+Blather is a speech recognizer that will run commands when a user speaks preset sentences. 
 
-pocketsphinx	
-gstreamer (and what ever plugin has pocket sphinx support)
-pyside (only required for the Qt based UI)
+##Requirements
+1. pocketsphinx	
+2. gstreamer (and what ever plugin has pocket sphinx support)  
+3. pyside (only required for the Qt based UI)
+4. pygtk (only required for the Gtk based UI)
 
+##Usage
 0. move commands.tmp to ~/.config/blather/commands and fill the file with sentences and command to run
-
-1. Run blather.py, this will generate ~/.config/blather/sentences.corpus based on sentences in the 'commands' file
+1. Run Blather.py, this will generate ~/.config/blather/sentences.corpus based on sentences in the 'commands' file
 2. quit blather (there is a good chance it will just segfault)
 3. go to <http://www.speech.cs.cmu.edu/tools/lmtool-new.html> and upload the sentences.corpus file
 4. download the resulting XXXX.lm file to the ~/.config/blather/language directory and rename to file to 'lm'
 5. download the resulting XXXX.dic file to the ~/.config/blather/language directory and rename to file to 'dic'
-6. run blather.py
-    * for Qt GUI, run blather.py -qt
+6. run Blather.py
+    * for Qt GUI, run Blather.py -qt
+    * for Gtk GUI, run Blather.py -gtk
 7. start talking
 
 ####Bonus
-once the sentences.corpus file has been created, run the language_updater.sh to automate the process of creating and downloading language files.
+once the sentences.corpus file has been created, run the language_updater.sh script to automate the process of creating and downloading language files.
