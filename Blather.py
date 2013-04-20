@@ -51,16 +51,17 @@ class Blather:
 						#this is a parsible line
 						(key,value) = line.split(":",1)
 						print key, value
-						self.commands[key.strip()] = value.strip()
+						self.commands[key.strip().lower()] = value.strip()
 						strings.write( key.strip()+"\n")
 		#close the strings file
 		strings.close()
 	
 	
 	def recognizer_finished(self, recognizer, text):
+		t = text.lower()
 		#is there a matching command?
-		if self.commands.has_key( text ):
-			cmd = self.commands[text]
+		if self.commands.has_key( t ):
+			cmd = self.commands[t]
 			print cmd
 			subprocess.call(cmd, shell=True)
 		else:
@@ -71,7 +72,7 @@ class Blather:
 				#stop listening
 				self.recognizer.pause()
 			#let the UI know that there is a finish
-			self.ui.finished(text)
+			self.ui.finished(t)
 	
 	def run(self):
 		if self.ui:
