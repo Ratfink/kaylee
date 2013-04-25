@@ -1,4 +1,8 @@
 #!/usr/bin/env python2
+
+# -- this code is licensed GPLv3
+# Copyright 2013 Jezra
+
 import sys
 import signal
 import gobject

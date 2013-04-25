@@ -1,4 +1,6 @@
-#!/usr/bin/env python2
+#This is part of Blather
+# -- this code is licensed GPLv3
+# Copyright 2013 Jezra
 import sys
 import gobject
 #Gtk

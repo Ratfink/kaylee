@@ -1,4 +1,7 @@
-#!/usr/bin/env python2
+#This is part of Blather
+# -- this code is licensed GPLv3
+# Copyright 2013 Jezra
+
 import pygst
 pygst.require('0.10')
 import gst
