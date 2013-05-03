@@ -19,6 +19,7 @@ class UI(gobject.GObject):
 		self.window.connect("delete_event", self.delete_event)
 		#give the window a name
 		self.window.set_title("BlatherGtk")
+		self.window.set_resizable(False)
 		
 		layout = gtk.VBox()
 		self.window.add(layout)

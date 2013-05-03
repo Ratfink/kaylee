@@ -21,6 +21,7 @@ class UI(gobject.GObject):
 		self.window = QMainWindow()
 		#give the window a name
 		self.window.setWindowTitle("BlatherQt")
+		self.window.setMaximumSize(400,200)
 		center = QWidget()
 		self.window.setCentralWidget(center)
 		
