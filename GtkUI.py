@@ -12,8 +12,9 @@ class UI(gobject.GObject):
 		'command' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING,))
 	}
 	
-	def __init__(self,args):
+	def __init__(self,args, continuous):
 		gobject.GObject.__init__(self)
+		self.continuous = continuous
 		#make a window
 		self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
 		self.window.connect("delete_event", self.delete_event)
@@ -37,7 +38,7 @@ class UI(gobject.GObject):
 		#add a label to the UI to display the last command
 		self.label = gtk.Label()
 		layout.add(self.label)
-	
+
 	def ccheckbox_clicked(self, widget):
 		checked = self.ccheckbox.get_active()
 		self.lsbutton.set_sensitive(not checked)
@@ -63,6 +64,8 @@ class UI(gobject.GObject):
 			
 	def run(self):
 		self.window.show_all()
+		if self.continuous:
+			self.ccheckbox.set_active(True)
 	
 	def quit(self):
 		pass

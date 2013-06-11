@@ -8,7 +8,8 @@ import signal
 import gobject
 import os.path
 import subprocess
-from Recognizer import Recognizer
+from optparse import OptionParser
+
 
 #where are the files?
 conf_dir = os.path.expanduser("~/.config/blather")
@@ -22,26 +23,30 @@ if not os.path.exists(lang_dir):
 	os.makedirs(lang_dir)
 
 class Blather:
-	def __init__(self, args):
+	def __init__(self, opts):
+		#import the recognizer so Gst doesn't clobber our -h
+		from Recognizer import Recognizer
 		self.ui = None
+		ui_continuous_listen = False
 		self.continuous_listen = False
 		self.commands = {}
 		self.read_commands()
 		self.recognizer = Recognizer(lang_file, dic_file)
 		self.recognizer.connect('finished',self.recognizer_finished)
-		#is there an arg?
-		if len(args) > 1:
-			if args[1] == "-qt":
+		
+		if opts.interface != None:
+			if opts.interface == "q":
 				#import the ui from qt
 				from QtUI import UI
-			elif args[1] == "-gtk":
+			elif opts.interface == "g":
 				from GtkUI import UI
 			else:
 				print "no GUI defined"
 				sys.exit()
-			self.ui = UI(args)
+				
+			self.ui = UI(args,opts.continuous)
 			self.ui.connect("command", self.process_command)
-
+					
 	def read_commands(self):
 		#read the.commands file
 		file_lines = open(command_file)
@@ -105,8 +110,17 @@ class Blather:
 			self.quit()
 		
 if __name__ == "__main__":
+	parser = OptionParser()
+	parser.add_option("-i", "--interface",  type="string", dest="interface",
+		action='store',
+		help="Interface to use (if any). 'q' for Qt, 'g' for GTK")
+	parser.add_option("-c", "--continuous",
+		action="store_true", dest="continuous", default=False,
+		help="starts interface with 'continuous' listen enabled")
+
+	(options, args) = parser.parse_args()
 	#make our blather object
-	blather = Blather(sys.argv)
+	blather = Blather(options)
 	#init gobject threads
 	gobject.threads_init()
 	#we want a main loop

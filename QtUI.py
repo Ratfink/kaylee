@@ -13,7 +13,8 @@ class UI(gobject.GObject):
 		'command' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING,))
 	}
 	
-	def __init__(self,args):
+	def __init__(self,args,continuous):
+		self.continuous = continuous
 		gobject.GObject.__init__(self)
 		#start by making our app
 		self.app = QApplication(args)
@@ -69,6 +70,9 @@ class UI(gobject.GObject):
 			
 	def run(self):
 		self.window.show()
+		if self.continuous:
+			self.ccheckbox.setCheckState(Qt.Checked)
+			self.ccheckbox_clicked()
 		self.app.exec_()
 		self.emit("command", "quit")
 	

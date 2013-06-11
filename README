@@ -15,9 +15,15 @@ Blather is a speech recognizer that will run commands when a user speaks preset 
 4. download the resulting XXXX.lm file to the ~/.config/blather/language directory and rename to file to 'lm'
 5. download the resulting XXXX.dic file to the ~/.config/blather/language directory and rename to file to 'dic'
 6. run Blather.py
-    * for Qt GUI, run Blather.py -qt
-    * for Gtk GUI, run Blather.py -gtk
+    * for Qt GUI, run Blather.py -i q
+    * for Gtk GUI, run Blather.py -i g
+    * to start a UI in 'continuous' listen mode, use the -c flag  
+
 7. start talking
 
 ####Bonus
 once the sentences.corpus file has been created, run the language_updater.sh script to automate the process of creating and downloading language files.
+
+**Example**  
+To run blather with the GTK UI and start in continuous listen mode:   
+./Blather.py -i g -c
