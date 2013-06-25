@@ -16,6 +16,7 @@ conf_dir = os.path.expanduser("~/.config/blather")
 lang_dir = os.path.join(conf_dir, "language")
 command_file = os.path.join(conf_dir, "commands")
 strings_file = os.path.join(conf_dir, "sentences.corpus")
+history_file = os.path.join(conf_dir, "blather.history")
 lang_file = os.path.join(lang_dir,'lm')
 dic_file = os.path.join(lang_dir,'dic')
 #make the lang_dir if it doesn't exist
@@ -27,6 +28,8 @@ class Blather:
 		#import the recognizer so Gst doesn't clobber our -h
 		from Recognizer import Recognizer
 		self.ui = None
+		#keep track of the opts
+		self.opts = opts
 		ui_continuous_listen = False
 		self.continuous_listen = False
 		self.commands = {}
@@ -46,6 +49,10 @@ class Blather:
 				
 			self.ui = UI(args,opts.continuous)
 			self.ui.connect("command", self.process_command)
+		
+		if self.opts.history:
+			self.history = []
+		
 					
 	def read_commands(self):
 		#read the.commands file
@@ -65,6 +72,19 @@ class Blather:
 		#close the strings file
 		strings.close()
 	
+	def log_history(self,text):
+		if self.opts.history:
+			self.history.append(text)
+			if len(self.history) > self.opts.history:
+				#pop off the first item
+				self.history.pop(0)
+			
+			#open and truncate the blather history file
+			hfile = open(history_file, "w")
+			for line in self.history:
+				hfile.write( line+"\n")
+			#close the  file
+			hfile.close()
 	
 	def recognizer_finished(self, recognizer, text):
 		t = text.lower()
@@ -73,6 +93,7 @@ class Blather:
 			cmd = self.commands[t]
 			print cmd
 			subprocess.call(cmd, shell=True)
+			self.log_history(text)
 		else:
 			print "no matching command"
 		#if there is a UI and we are not continuous listen
@@ -117,6 +138,9 @@ if __name__ == "__main__":
 	parser.add_option("-c", "--continuous",
 		action="store_true", dest="continuous", default=False,
 		help="starts interface with 'continuous' listen enabled")
+	parser.add_option("-H", "--history", type="int",
+		action="store", dest="history", 	
+		help="number of commands to store in history file")
 
 	(options, args) = parser.parse_args()
 	#make our blather object
