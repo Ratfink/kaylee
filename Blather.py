@@ -14,7 +14,7 @@ from optparse import OptionParser
 #where are the files?
 conf_dir = os.path.expanduser("~/.config/blather")
 lang_dir = os.path.join(conf_dir, "language")
-command_file = os.path.join(conf_dir, "commands")
+command_file = os.path.join(conf_dir, "commands.conf")
 strings_file = os.path.join(conf_dir, "sentences.corpus")
 history_file = os.path.join(conf_dir, "blather.history")
 lang_file = os.path.join(lang_dir,'lm')
