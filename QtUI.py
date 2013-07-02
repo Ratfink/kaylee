@@ -6,7 +6,7 @@ import gobject
 # Qt stuff
 from PySide.QtCore import Signal, Qt
 from PySide.QtGui import QApplication, QWidget, QMainWindow, QVBoxLayout
-from PySide.QtGui import QLabel, QPushButton, QCheckBox
+from PySide.QtGui import QLabel, QPushButton, QCheckBox, QIcon
 
 class UI(gobject.GObject):
 	__gsignals__ = {
@@ -76,9 +76,6 @@ class UI(gobject.GObject):
 		self.app.exec_()
 		self.emit("command", "quit")
 	
-	def quit(self):
-		pass
-		
 	def finished(self, text):
 		print text
 		#if the continuous isn't pressed
@@ -89,3 +86,6 @@ class UI(gobject.GObject):
 	def quit(self):
 		#sys.exit()
 		pass
+
+	def set_icon(self, icon):
+		self.window.setWindowIcon(QIcon(icon))       

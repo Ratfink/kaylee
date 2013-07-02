@@ -80,3 +80,6 @@ class UI(gobject.GObject):
 			self.lsbutton_stopped()
 		self.label.set_text(text)
 		
+	def set_icon(self, icon):
+		gtk.window_set_default_icon_from_file(icon)
+		

@@ -49,6 +49,10 @@ class Blather:
 				
 			self.ui = UI(args,opts.continuous)
 			self.ui.connect("command", self.process_command)
+			#can we load the icon resource?
+			icon = self.load_resource("icon.png")
+			if icon:
+				self.ui.set_icon(icon)
 		
 		if self.opts.history:
 			self.history = []
@@ -129,7 +133,19 @@ class Blather:
 			self.recognizer.pause()
 		elif command == "quit":
 			self.quit()
-		
+	
+	def load_resource(self,string):
+		local_data = os.path.join(os.path.dirname(__file__), 'data')
+		paths = ["/usr/share/blather/","/usr/local/share/blather", local_data]
+		for path in paths:
+			resource = os.path.join(path, string)
+			if os.path.exists( resource ):
+				return resource
+		#if we get this far, no resource was found
+		return False
+    
+    
+    
 if __name__ == "__main__":
 	parser = OptionParser()
 	parser.add_option("-i", "--interface",  type="string", dest="interface",
