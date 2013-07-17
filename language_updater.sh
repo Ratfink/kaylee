@@ -2,7 +2,7 @@
 
 blatherdir=~/.config/blather
 sentences=$blatherdir/sentences.corpus
-sourcefile=$blatherdir/commands
+sourcefile=$blatherdir/commands.conf
 langdir=$blatherdir/language
 tempfile=$blatherdir/url.txt
 lmtoolurl=http://www.speech.cs.cmu.edu/cgi-bin/tools/lmtool/run
