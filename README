@@ -8,7 +8,7 @@ Blather is a speech recognizer that will run commands when a user speaks preset 
 4. pygtk (only required for the Gtk based UI)
 
 ##Usage
-0. move commands.tmp to ~/.config/blather/commands and fill the file with sentences and command to run
+0. move commands.tmp to ~/.config/blather/commands.conf and fill the file with sentences and command to run
 1. Run Blather.py, this will generate ~/.config/blather/sentences.corpus based on sentences in the 'commands' file
 2. quit blather (there is a good chance it will just segfault)
 3. go to <http://www.speech.cs.cmu.edu/tools/lmtool-new.html> and upload the sentences.corpus file
