@@ -34,7 +34,7 @@ class Blather:
 		self.continuous_listen = False
 		self.commands = {}
 		self.read_commands()
-		self.recognizer = Recognizer(lang_file, dic_file)
+		self.recognizer = Recognizer(lang_file, dic_file, opts.microphone )
 		self.recognizer.connect('finished',self.recognizer_finished)
 
 		if opts.interface != None:
@@ -155,6 +155,9 @@ if __name__ == "__main__":
 	parser.add_option("-H", "--history", type="int",
 		action="store", dest="history",
 		help="number of commands to store in history file")
+	parser.add_option("-m", "--microphone", type="int",
+		action="store", dest="microphone", default=None,
+		help="Audio input card to use (if other than system default)")
 
 	(options, args) = parser.parse_args()
 	#make our blather object
