@@ -11,7 +11,7 @@ Blather is a speech recognizer that will run commands when a user speaks preset 
 0. move commands.tmp to ~/.config/blather/commands.conf and fill the file with sentences and command to run
 1. Run Blather.py, this will generate ~/.config/blather/sentences.corpus based on sentences in the 'commands' file
 2. quit blather (there is a good chance it will just segfault)
-3. go to <http://www.speech.cs.cmu.edu/tools/lmtool-new.html> and upload the sentences.corpus file
+3. go to <http://www.speech.cs.cmu.edu/tools/lmtool.html> and upload the sentences.corpus file
 4. download the resulting XXXX.lm file to the ~/.config/blather/language directory and rename to file to 'lm'
 5. download the resulting XXXX.dic file to the ~/.config/blather/language directory and rename to file to 'dic'
 6. run Blather.py
