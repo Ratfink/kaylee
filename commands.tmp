@@ -1,6 +1,5 @@
 # commands are key:value pairs 
 # key is the sentence to listen for
-# key must be in ALL CAPS 
 # value is the command to run when the key is spoken
 
-HELLO WORLD:echo "hello world"
+hello world:echo "hello world"
