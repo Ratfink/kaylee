@@ -9,7 +9,10 @@ import gobject
 import os.path
 import subprocess
 from optparse import OptionParser
-
+try:
+	import yaml
+except:
+	print "YAML is not supported. ~/.config/blather/options.yaml will not function"
 
 #where are the files?
 conf_dir = os.path.expanduser("~/.config/blather")
@@ -17,6 +20,7 @@ lang_dir = os.path.join(conf_dir, "language")
 command_file = os.path.join(conf_dir, "commands.conf")
 strings_file = os.path.join(conf_dir, "sentences.corpus")
 history_file = os.path.join(conf_dir, "blather.history")
+opt_file = os.path.join(conf_dir, "options.yaml")
 lang_file = os.path.join(lang_dir,'lm')
 dic_file = os.path.join(lang_dir,'dic')
 #make the lang_dir if it doesn't exist
@@ -28,8 +32,7 @@ class Blather:
 		#import the recognizer so Gst doesn't clobber our -h
 		from Recognizer import Recognizer
 		self.ui = None
-		#keep track of the opts
-		self.opts = opts
+		self.options = {}
 		ui_continuous_listen = False
 		self.continuous_listen = False
 		self.commands = {}
@@ -37,26 +40,39 @@ class Blather:
 		self.recognizer = Recognizer(lang_file, dic_file, opts.microphone )
 		self.recognizer.connect('finished',self.recognizer_finished)
 
-		if opts.interface != None:
-			if opts.interface == "q":
-				#import the ui from qt
+		#load the options file
+		self.load_options()
+		#merge the opts
+		for k,v in opts.__dict__.items():
+			if not k in self.options:
+				self.options[k] = v
+
+		print "Using Options: ", self.options
+
+		if self.options['interface'] != None:
+			if self.options['interface'] == "q":
 				from QtUI import UI
-			elif opts.interface == "g":
+			elif self.options['interface'] == "g":
 				from GtkUI import UI
+			elif self.options['interface'] == "gt":
+				from GtkTrayUI import UI
 			else:
 				print "no GUI defined"
 				sys.exit()
 
-			self.ui = UI(args,opts.continuous)
+			self.ui = UI(args, self.options['continuous'])
 			self.ui.connect("command", self.process_command)
 			#can we load the icon resource?
 			icon = self.load_resource("icon.png")
 			if icon:
-				self.ui.set_icon(icon)
+				self.ui.set_icon_active_asset(icon)
+			#can we load the icon_inactive resource?
+			icon_inactive = self.load_resource("icon_inactive.png")
+			if icon_inactive:
+				self.ui.set_icon_inactive_asset(icon_inactive)
 
-		if self.opts.history:
+		if self.options['history']:
 			self.history = []
-
 
 	def read_commands(self):
 		#read the.commands file
@@ -76,10 +92,20 @@ class Blather:
 		#close the strings file
 		strings.close()
 
+	def load_options(self):
+		#is there an opt file?
+		try:
+			opt_fh = open(opt_file)
+			text = opt_fh.read()
+			self.options = yaml.load(text)
+		except:
+			pass
+
+
 	def log_history(self,text):
-		if self.opts.history:
+		if self.options['history']:
 			self.history.append(text)
-			if len(self.history) > self.opts.history:
+			if len(self.history) > self.options['history']:
 				#pop off the first item
 				self.history.pop(0)
 
@@ -148,7 +174,7 @@ if __name__ == "__main__":
 	parser = OptionParser()
 	parser.add_option("-i", "--interface",  type="string", dest="interface",
 		action='store',
-		help="Interface to use (if any). 'q' for Qt, 'g' for GTK")
+		help="Interface to use (if any). 'q' for Qt, 'g' for GTK, 'gt' for GTK system tray icon")
 	parser.add_option("-c", "--continuous",
 		action="store_true", dest="continuous", default=False,
 		help="starts interface with 'continuous' listen enabled")

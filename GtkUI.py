@@ -54,8 +54,10 @@ class UI(gobject.GObject):
 		if checked:
 			self.lsbutton_stopped()
 			self.emit('command', "continuous_listen")
+			self.set_icon_active()
 		else:
 			self.emit('command', "continuous_stop")
+			self.set_icon_inactive()
 
 	def lsbutton_stopped(self):
 		self.lsbutton.set_label("Listen")
@@ -67,13 +69,18 @@ class UI(gobject.GObject):
 			self.lsbutton.set_label("Stop")
 			#clear the label
 			self.label.set_text("")
+			self.set_icon_active()
 		else:
 			self.lsbutton_stopped()
 			self.emit("command", "stop")
+			self.set_icon_inactive()
 
 	def run(self):
+		#set the default icon
+		self.set_icon_inactive()
 		self.window.show_all()
 		if self.continuous:
+			self.set_icon_active()
 			self.ccheckbox.set_active(True)
 
 	def accel_quit(self, accel_group, acceleratable, keyval, modifier):
@@ -87,8 +94,19 @@ class UI(gobject.GObject):
 		#if the continuous isn't pressed
 		if not self.ccheckbox.get_active():
 			self.lsbutton_stopped()
+			self.set_icon_inactive()
 		self.label.set_text(text)
 
-	def set_icon(self, icon):
-		gtk.window_set_default_icon_from_file(icon)
+	def set_icon_active_asset(self, i):
+		self.icon_active = i
+
+	def set_icon_inactive_asset(self, i):
+		self.icon_inactive = i
+
+	def set_icon_active(self):
+		gtk.window_set_default_icon_from_file(self.icon_active)
+
+	def set_icon_inactive(self):
+		gtk.window_set_default_icon_from_file(self.icon_inactive)
+
 

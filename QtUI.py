@@ -60,9 +60,11 @@ class UI(gobject.GObject):
 			self.lsbutton.setEnabled(False)
 			self.lsbutton_stopped()
 			self.emit('command', "continuous_listen")
+			self.set_icon_active()
 		else:
 			self.lsbutton.setEnabled(True)
 			self.emit('command', "continuous_stop")
+			self.set_icon_inactive()
 
 	def lsbutton_stopped(self):
 		self.lsbutton.setText("Listen")
@@ -74,13 +76,17 @@ class UI(gobject.GObject):
 			self.lsbutton.setText("Stop")
 			#clear the label
 			self.label.setText("")
+			self.set_icon_active()
 		else:
 			self.lsbutton_stopped()
 			self.emit("command", "stop")
+			self.set_icon_inactive()
 
 	def run(self):
+		self.set_icon_inactive()
 		self.window.show()
 		if self.continuous:
+			self.set_icon_active()
 			self.ccheckbox.setCheckState(Qt.Checked)
 			self.ccheckbox_clicked()
 		self.app.exec_()
@@ -95,3 +101,16 @@ class UI(gobject.GObject):
 
 	def set_icon(self, icon):
 		self.window.setWindowIcon(QIcon(icon))
+
+	def set_icon_active_asset(self, i):
+		self.icon_active = i
+
+	def set_icon_inactive_asset(self, i):
+		self.icon_inactive = i
+
+	def set_icon_active(self):
+		self.window.setWindowIcon(QIcon(self.icon_active))
+
+	def set_icon_inactive(self):
+		self.window.setWindowIcon(QIcon(self.icon_inactive))
+

@@ -7,6 +7,7 @@ Blather is a speech recognizer that will run commands when a user speaks preset 
 3. gstreamer-0.10 base plugins (required for alsa)
 4. pyside (only required for the Qt based UI)
 5. pygtk (only required for the Gtk based UI)
+6. pyyaml (only required for reading the options file)
 
 ##Usage
 0. move commands.tmp to ~/.config/blather/commands.conf and fill the file with sentences and command to run
@@ -19,20 +20,22 @@ Blather is a speech recognizer that will run commands when a user speaks preset 
     * for Qt GUI, run Blather.py -i q
     * for Gtk GUI, run Blather.py -i g
     * to start a UI in 'continuous' listen mode, use the -c flag
-    * to use a microphone other than the system default, use the -d flag
+    * to use a microphone other than the system default, use the -m flag
 7. start talking
 
-####Bonus
+**Note:** to start Blather without needing to enter command line options all the time, copy options.yaml.tmp to ~/.config/blather/options.yaml and edit accordingly.
+
+###Bonus
 once the sentences.corpus file has been created, run the language_updater.sh script to automate the process of creating and downloading language files.
 
-####Examples
+###Examples
 To run blather with the GTK UI and start in continuous listen mode:
-./Blather.py -i g -c
+`./Blather.py -i g -c`
 
 To run blather with no UI and using a USB microphone recognized and device 2:
-./Blather.py -d 2
+`./Blather.py -m 2`
 
-####Finding the Device Number of a USB microphone
+###Finding the Device Number of a USB microphone
 There are a few ways to find the device number of a USB microphone.
 
 * `cat /proc/asound/cards`
