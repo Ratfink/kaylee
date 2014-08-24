@@ -29,12 +29,14 @@ if not os.path.exists(lang_dir):
 
 class Blather:
 	def __init__(self, opts):
+
 		#import the recognizer so Gst doesn't clobber our -h
 		from Recognizer import Recognizer
 		self.ui = None
 		self.options = {}
 		ui_continuous_listen = False
 		self.continuous_listen = False
+
 		self.commands = {}
 		self.read_commands()
 		self.recognizer = Recognizer(lang_file, dic_file, opts.microphone )
@@ -44,7 +46,7 @@ class Blather:
 		self.load_options()
 		#merge the opts
 		for k,v in opts.__dict__.items():
-			if not k in self.options:
+			if (not k in self.options) or opts.override:
 				self.options[k] = v
 
 		print "Using Options: ", self.options
@@ -120,12 +122,18 @@ class Blather:
 		t = text.lower()
 		#is there a matching command?
 		if self.commands.has_key( t ):
+			#run the valid_sentence_command if there is a valid sentence command
+			if self.options['valid_sentence_command']:
+				subprocess.call(self.options['valid_sentence_command'], shell=True)
 			cmd = self.commands[t]
 			print cmd
 			subprocess.call(cmd, shell=True)
 			self.log_history(text)
 		else:
-			print "no matching command"
+			#run the invalid_sentence_command if there is a valid sentence command
+			if self.options['invalid_sentence_command']:
+				subprocess.call(self.options['invalid_sentence_command'], shell=True)
+			print "no matching command %s" %(t)
 		#if there is a UI and we are not continuous listen
 		if self.ui:
 			if not self.continuous_listen:
@@ -169,21 +177,35 @@ class Blather:
 		return False
 
 
-
 if __name__ == "__main__":
 	parser = OptionParser()
 	parser.add_option("-i", "--interface",  type="string", dest="interface",
 		action='store',
 		help="Interface to use (if any). 'q' for Qt, 'g' for GTK, 'gt' for GTK system tray icon")
+
 	parser.add_option("-c", "--continuous",
 		action="store_true", dest="continuous", default=False,
 		help="starts interface with 'continuous' listen enabled")
+
+	parser.add_option("-o", "--override",
+		action="store_true", dest="override", default=False,
+		help="override config file with command line options")
+
 	parser.add_option("-H", "--history", type="int",
 		action="store", dest="history",
 		help="number of commands to store in history file")
+
 	parser.add_option("-m", "--microphone", type="int",
 		action="store", dest="microphone", default=None,
 		help="Audio input card to use (if other than system default)")
+
+	parser.add_option("--valid-sentence-command",  type="string", dest="valid_sentence_command",
+		action='store',
+		help="command to run when a valid sentence is detected")
+
+	parser.add_option( "--invalid-sentence-command",  type="string", dest="invalid_sentence_command",
+		action='store',
+		help="command to run when an invalid sentence is detected")
 
 	(options, args) = parser.parse_args()
 	#make our blather object
