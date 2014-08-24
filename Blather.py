@@ -50,8 +50,6 @@ class Blather:
 			if (not k in self.options) or opts.override:
 				self.options[k] = v
 
-		print "Using Options: ", self.options
-
 		if self.options['interface'] != None:
 			if self.options['interface'] == "q":
 				from QtUI import UI
@@ -80,6 +78,8 @@ class Blather:
 		#create the recognizer
 		self.recognizer = Recognizer(lang_file, dic_file, self.options['microphone'] )
 		self.recognizer.connect('finished',self.recognizer_finished)
+
+		print "Using Options: ", self.options
 
 	def read_commands(self):
 		#read the.commands file
