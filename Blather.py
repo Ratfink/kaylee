@@ -38,12 +38,13 @@ class Blather:
 		self.continuous_listen = False
 
 		self.commands = {}
+
+		#read the commands
 		self.read_commands()
-		self.recognizer = Recognizer(lang_file, dic_file, opts.microphone )
-		self.recognizer.connect('finished',self.recognizer_finished)
 
 		#load the options file
 		self.load_options()
+
 		#merge the opts
 		for k,v in opts.__dict__.items():
 			if (not k in self.options) or opts.override:
@@ -75,6 +76,10 @@ class Blather:
 
 		if self.options['history']:
 			self.history = []
+
+		#create the recognizer
+		self.recognizer = Recognizer(lang_file, dic_file, self.options['microphone'] )
+		self.recognizer.connect('finished',self.recognizer_finished)
 
 	def read_commands(self):
 		#read the.commands file
