@@ -80,7 +80,6 @@ class UI(gobject.GObject):
 		self.emit("command", "quit")
 
 	def finished(self, text):
-		print text
 		if not self.menu_continuous.get_active():
 			self.menu_listen.set_label("Listen")
 			self.statusicon.set_from_icon_name("blather_stopped")

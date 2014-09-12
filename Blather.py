@@ -123,6 +123,11 @@ class Blather:
 			#close the  file
 			hfile.close()
 
+	# Print the cmd and then run the command
+	def run_command(self, cmd):
+		print cmd
+		subprocess.call(cmd, shell=True)
+
 	def recognizer_finished(self, recognizer, text):
 		t = text.lower()
 		#is there a matching command?
@@ -131,8 +136,12 @@ class Blather:
 			if self.options['valid_sentence_command']:
 				subprocess.call(self.options['valid_sentence_command'], shell=True)
 			cmd = self.commands[t]
-			print cmd
-			subprocess.call(cmd, shell=True)
+			#should we be passing words?
+			if self.options['pass_words']:
+				cmd+=" "+t
+				self.run_command(cmd)
+			else:
+				self.run_command(cmd)
 			self.log_history(text)
 		else:
 			#run the invalid_sentence_command if there is a valid sentence command
@@ -191,6 +200,10 @@ if __name__ == "__main__":
 	parser.add_option("-c", "--continuous",
 		action="store_true", dest="continuous", default=False,
 		help="starts interface with 'continuous' listen enabled")
+
+	parser.add_option("-p", "--pass-words",
+		action="store_true", dest="pass_words", default=False,
+		help="passes the recognized words as arguments to the shell command")
 
 	parser.add_option("-o", "--override",
 		action="store_true", dest="override", default=False,

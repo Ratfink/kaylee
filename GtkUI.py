@@ -90,7 +90,6 @@ class UI(gobject.GObject):
 		self.emit("command", "quit")
 
 	def finished(self, text):
-		print text
 		#if the continuous isn't pressed
 		if not self.ccheckbox.get_active():
 			self.lsbutton_stopped()
