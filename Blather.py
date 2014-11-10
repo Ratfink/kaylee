@@ -76,7 +76,12 @@ class Blather:
 			self.history = []
 
 		#create the recognizer
-		self.recognizer = Recognizer(lang_file, dic_file, self.options['microphone'] )
+		try:
+			self.recognizer = Recognizer(lang_file, dic_file, self.options['microphone'] )
+		except Exception, e:
+			#no recognizer? bummer
+			sys.exit()
+
 		self.recognizer.connect('finished',self.recognizer_finished)
 
 		print "Using Options: ", self.options

@@ -7,6 +7,7 @@ pygst.require('0.10')
 import gst
 import os.path
 import gobject
+import sys
 
 #define some global variables
 this_dir = os.path.dirname( os.path.abspath(__file__) )
@@ -31,6 +32,7 @@ class Recognizer(gobject.GObject):
 		except Exception, e:
 			print e.message
 			print "You may need to install gstreamer0.10-pocketsphinx"
+			raise e
 
 		#get the Auto Speech Recognition piece
 		asr=self.pipeline.get_by_name('asr')
