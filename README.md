@@ -35,6 +35,17 @@ To run blather with the GTK UI and start in continuous listen mode:
 To run blather with no UI and using a USB microphone recognized and device 2:
 `./Blather.py -m 2`
 
+
+To have blather pass the matched sentence to the executing command:  
+ `./Blather -p`  
+
+ **explanation:** if the commands.conf contains:  
+ **good morning world : example_command.sh**   
+ then 3 arguments, 'good', 'morning', and 'world' would get passed to example_command.sh as  
+ `example_command.sh good morning world`
+
+
+
 ###Finding the Device Number of a USB microphone
 There are a few ways to find the device number of a USB microphone.
 
