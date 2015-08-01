@@ -7,7 +7,11 @@ Blather is a speech recognizer that will run commands when a user speaks preset 
 3. gstreamer-0.10 base plugins (required for alsa)
 4. pyside (only required for the Qt based UI)
 5. pygtk (only required for the Gtk based UI)
-6. pyyaml (only required for reading the options file)
+6. pyyaml (only required for reading the options file)  
+
+**Note:** it may also be required to install `pocketsphinx-hmm-en-hub4wsj`
+
+
 
 ##Usage
 0. move commands.tmp to ~/.config/blather/commands.conf and fill the file with sentences and command to run
@@ -29,23 +33,26 @@ Blather is a speech recognizer that will run commands when a user speaks preset 
 once the sentences.corpus file has been created, run the language_updater.sh script to automate the process of creating and downloading language files.
 
 ###Examples
-To run blather with the GTK UI and start in continuous listen mode:
+* To run blather with the GTK UI and start in continuous listen mode:  
 `./Blather.py -i g -c`
 
-To run blather with no UI and using a USB microphone recognized and device 2:
+* To run blather with no UI and using a USB microphone recognized and device 2:  
 `./Blather.py -m 2`
 
+* To have blather pass the matched sentence to the executing command:  
+ `./Blather.py -p`  
 
-To have blather pass the matched sentence to the executing command:  
- `./Blather -p`  
-
- **explanation:** if the commands.conf contains:  
+ 	**explanation:** if the commands.conf contains:  
  **good morning world : example_command.sh**   
  then 3 arguments, 'good', 'morning', and 'world' would get passed to example_command.sh as  
  `example_command.sh good morning world`
 
-
-
+* To run a command when a valid sentence has been detected:   
+	`./Blather.py --valid-sentence-command=/path/to/command`  
+	**note:** this can be set in the options.yml file
+* To run a command when a invalid sentence has been detected:   
+	`./Blather.py --invalid-sentence-command=/path/to/command`  
+	**note:** this can be set in the options.yml file
 ###Finding the Device Number of a USB microphone
 There are a few ways to find the device number of a USB microphone.
 
