@@ -53,6 +53,7 @@ once the sentences.corpus file has been created, run the language_updater.sh scr
 * To run a command when a invalid sentence has been detected:   
 	`./Blather.py --invalid-sentence-command=/path/to/command`  
 	**note:** this can be set in the options.yml file
+
 ###Finding the Device Number of a USB microphone
 There are a few ways to find the device number of a USB microphone.
 
