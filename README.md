@@ -1,7 +1,9 @@
 #Blather
+
 Blather is a speech recognizer that will run commands when a user speaks preset sentences.
 
 ##Requirements
+
 1. pocketsphinx
 2. gstreamer-0.10 (and what ever plugin has pocket sphinx support)
 3. gstreamer-0.10 base plugins (required for alsa)
@@ -12,8 +14,8 @@ Blather is a speech recognizer that will run commands when a user speaks preset 
 **Note:** it may also be required to install `pocketsphinx-hmm-en-hub4wsj`
 
 
-
 ##Usage
+
 0. move commands.tmp to ~/.config/blather/commands.conf and fill the file with sentences and command to run
 1. Run Blather.py, this will generate ~/.config/blather/sentences.corpus based on sentences in the 'commands' file
 2. quit blather (there is a good chance it will just segfault)
@@ -30,9 +32,11 @@ Blather is a speech recognizer that will run commands when a user speaks preset 
 **Note:** to start Blather without needing to enter command line options all the time, copy options.yaml.tmp to ~/.config/blather/options.yaml and edit accordingly.
 
 ###Bonus
+
 once the sentences.corpus file has been created, run the language_updater.sh script to automate the process of creating and downloading language files.
 
 ###Examples
+
 * To run blather with the GTK UI and start in continuous listen mode:  
 `./Blather.py -i g -c`
 
