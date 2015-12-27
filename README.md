@@ -11,6 +11,7 @@ but adds a lot of features that go beyond the original purpose of Blather.
 2. gstreamer-1.0 (and what ever plugin has pocketsphinx support)
 3. gstreamer-1.0 base plugins (required for ALSA)
 4. python-gobject (required for GStreamer and the GTK-based UI)
+5. python-requests (required for automatic language updating)
 
 **Note:** it may also be required to install `pocketsphinx-hmm-en-hub4wsj`
 
