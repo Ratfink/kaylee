@@ -52,8 +52,7 @@ class Blather:
 
         # Merge the options with the ones provided by command-line arguments
         for k, v in opts.__dict__.items():
-            if (not k in self.options) or opts.override:
-                self.options[k] = v
+            self.options[k] = v
 
         if self.options['interface'] != None:
             if self.options['interface'] == "g":
@@ -253,10 +252,6 @@ if __name__ == "__main__":
     parser.add_option("-p", "--pass-words",
             action="store_true", dest="pass_words", default=False,
             help="passes the recognized words as arguments to the shell command")
-
-    parser.add_option("-o", "--override",
-            action="store_true", dest="override", default=False,
-            help="override config file with command line options")
 
     parser.add_option("-H", "--history", type="int",
             action="store", dest="history",
