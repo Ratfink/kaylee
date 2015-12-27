@@ -13,7 +13,7 @@ class UI(GObject.GObject):
         'command' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_STRING,))
     }
 
-    def __init__(self,args, continuous):
+    def __init__(self, args, continuous):
         GObject.GObject.__init__(self)
         self.continuous = continuous
         # Make a window
@@ -33,8 +33,8 @@ class UI(GObject.GObject):
         layout.add(self.ccheckbox)
 
         # Connect the buttons
-        self.lsbutton.connect("clicked",self.lsbutton_clicked)
-        self.ccheckbox.connect("clicked",self.ccheckbox_clicked)
+        self.lsbutton.connect("clicked", self.lsbutton_clicked)
+        self.ccheckbox.connect("clicked", self.ccheckbox_clicked)
 
         # Add a label to the UI to display the last command
         self.label = Gtk.Label()

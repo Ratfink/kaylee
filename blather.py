@@ -180,7 +180,7 @@ class Blather:
     def recognizer_finished(self, recognizer, text):
         t = text.lower()
         # Is there a matching command?
-        if self.commands.has_key( t ):
+        if t in self.commands:
             # Run the valid_sentence_command if there is a valid sentence command
             if self.options['valid_sentence_command']:
                 subprocess.call(self.options['valid_sentence_command'], shell=True)
