@@ -4,8 +4,10 @@
 # Copyright 2015 Clayton G. Hobbs
 
 import sys
+import gi
 from gi.repository import GObject
 # Gtk
+gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk
 
 class UI(GObject.GObject):

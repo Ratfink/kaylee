@@ -1,8 +1,0 @@
-#This is a YAML file
-#these options can be over-ridden by commandline arguments
-continuous: false
-history: null
-microphone: null
-interface: null
-valid_sentence_command: null
-invalid_sentence_command: null

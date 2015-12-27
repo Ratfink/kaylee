@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 # This is part of Kaylee
 # -- this code is licensed GPLv3
@@ -11,8 +11,9 @@ import signal
 import hashlib
 import os.path
 import subprocess
-from optparse import OptionParser
+from argparse import ArgumentParser
 from gi.repository import GObject
+import json
 try:
     import yaml
 except:
@@ -26,7 +27,7 @@ lang_dir = os.path.join(conf_dir, "language")
 command_file = os.path.join(conf_dir, "commands.conf")
 strings_file = os.path.join(conf_dir, "sentences.corpus")
 history_file = os.path.join(conf_dir, "blather.history")
-opt_file = os.path.join(conf_dir, "options.yaml")
+opt_file = os.path.join(conf_dir, "options.json")
 hash_file = os.path.join(conf_dir, "hash.yaml")
 lang_file = os.path.join(lang_dir, 'lm')
 dic_file = os.path.join(lang_dir, 'dic')
@@ -50,9 +51,11 @@ class Blather:
         # Load the options file
         self.load_options()
 
+        print(opts)
         # Merge the options with the ones provided by command-line arguments
-        for k, v in opts.__dict__.items():
-            self.options[k] = v
+        for k, v in vars(opts).items():
+            if v is not None:
+                self.options[k] = v
 
         if self.options['interface'] != None:
             if self.options['interface'] == "g":
@@ -111,15 +114,11 @@ class Blather:
         strings.close()
 
     def load_options(self):
-        """If possible, load options from the options.yaml file"""
+        """Load options from the options.json file"""
         # Is there an opt file?
-        try:
-            opt_fh = open(opt_file)
-            text = opt_fh.read()
-            self.options = yaml.load(text)
-        except:
-            # Do nothing if the options file cannot be loaded
-            pass
+        with open(opt_file, 'r') as f:
+            self.options = json.load(f)
+            print(self.options)
 
     def log_history(self, text):
         if self.options['history']:
@@ -240,38 +239,38 @@ class Blather:
 
 
 if __name__ == "__main__":
-    parser = OptionParser()
-    parser.add_option("-i", "--interface",  type="string", dest="interface",
+    parser = ArgumentParser()
+    parser.add_argument("-i", "--interface",  type=str, dest="interface",
             action='store',
             help="Interface to use (if any). 'g' for GTK or 'gt' for GTK system tray icon")
 
-    parser.add_option("-c", "--continuous",
+    parser.add_argument("-c", "--continuous",
             action="store_true", dest="continuous", default=False,
             help="starts interface with 'continuous' listen enabled")
 
-    parser.add_option("-p", "--pass-words",
+    parser.add_argument("-p", "--pass-words",
             action="store_true", dest="pass_words", default=False,
             help="passes the recognized words as arguments to the shell command")
 
-    parser.add_option("-H", "--history", type="int",
+    parser.add_argument("-H", "--history", type=int,
             action="store", dest="history",
             help="number of commands to store in history file")
 
-    parser.add_option("-m", "--microphone", type="int",
+    parser.add_argument("-m", "--microphone", type=int,
             action="store", dest="microphone", default=None,
             help="Audio input card to use (if other than system default)")
 
-    parser.add_option("--valid-sentence-command",  type="string", dest="valid_sentence_command",
+    parser.add_argument("--valid-sentence-command",  type=str, dest="valid_sentence_command",
             action='store',
             help="command to run when a valid sentence is detected")
 
-    parser.add_option( "--invalid-sentence-command",  type="string", dest="invalid_sentence_command",
+    parser.add_argument( "--invalid-sentence-command",  type=str, dest="invalid_sentence_command",
             action='store',
             help="command to run when an invalid sentence is detected")
 
-    (options, args) = parser.parse_args()
+    args = parser.parse_args()
     # Make our blather object
-    blather = Blather(options)
+    blather = Blather(args)
     # Init gobject threads
     GObject.threads_init()
     # We want a main loop

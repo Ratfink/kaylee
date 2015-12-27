@@ -29,9 +29,9 @@ class Recognizer(GObject.GObject):
             audio_src = 'autoaudiosrc'
 
         # Build the pipeline
-        cmd = audio_src+' ! audioconvert ! audioresample ! pocketsphinx name=asr ! appsink sync=false'
+        cmd = audio_src + ' ! audioconvert ! audioresample ! pocketsphinx name=asr ! appsink sync=false'
         try:
-            self.pipeline=Gst.parse_launch( cmd )
+            self.pipeline = Gst.parse_launch( cmd )
         except Exception as e:
             print(e.message)
             print("You may need to install gstreamer1.0-pocketsphinx")
