@@ -106,7 +106,7 @@ class Blather:
                 (key, value) = line.split(":", 1)
                 print(key, value)
                 self.commands[key.strip().lower()] = value.strip()
-                strings.write( key.strip()+"\n")
+                strings.write(key.strip() + "\n")
         # Close the strings file
         strings.close()
 
@@ -127,7 +127,7 @@ class Blather:
             # Open and truncate the blather history file
             hfile = open(history_file, "w")
             for line in self.history:
-                hfile.write( line+"\n")
+                hfile.write(line + "\n")
             # Close the file
             hfile.close()
 
@@ -221,7 +221,7 @@ class Blather:
         paths = ["/usr/share/blather/", "/usr/local/share/blather", local_data]
         for path in paths:
             resource = os.path.join(path, string)
-            if os.path.exists( resource ):
+            if os.path.exists(resource):
                 return resource
         # If we get this far, no resource was found
         return False
@@ -253,7 +253,7 @@ if __name__ == "__main__":
             action='store',
             help="command to run when a valid sentence is detected")
 
-    parser.add_argument( "--invalid-sentence-command",  type=str, dest="invalid_sentence_command",
+    parser.add_argument("--invalid-sentence-command",  type=str, dest="invalid_sentence_command",
             action='store',
             help="command to run when an invalid sentence is detected")
 

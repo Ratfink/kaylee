@@ -12,7 +12,7 @@ import os.path
 import sys
 
 # Define some global variables
-this_dir = os.path.dirname( os.path.abspath(__file__) )
+this_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 class Recognizer(GObject.GObject):
@@ -31,7 +31,7 @@ class Recognizer(GObject.GObject):
         # Build the pipeline
         cmd = audio_src + ' ! audioconvert ! audioresample ! pocketsphinx name=asr ! appsink sync=false'
         try:
-            self.pipeline = Gst.parse_launch( cmd )
+            self.pipeline = Gst.parse_launch(cmd)
         except Exception as e:
             print(e.message)
             print("You may need to install gstreamer1.0-pocketsphinx")
