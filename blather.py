@@ -84,21 +84,17 @@ class Blather:
 
         self.recognizer.connect('finished', self.recognizer_finished)
 
-        print("Using Options: ", self.options)
-
     def read_commands(self):
         # Read the commands file
         file_lines = open(command_file)
         strings = open(strings_file, "w")
         for line in file_lines:
-            print(line)
             # Trim the white spaces
             line = line.strip()
             # If the line has length and the first char isn't a hash
             if len(line) and line[0]!="#":
                 # This is a parsible line
                 (key, value) = line.split(":", 1)
-                print(key, value)
                 self.commands[key.strip().lower()] = value.strip()
                 strings.write(key.strip() + "\n")
         # Close the strings file

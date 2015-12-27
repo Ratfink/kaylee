@@ -27,7 +27,14 @@ class Recognizer(GObject.GObject):
             audio_src = 'autoaudiosrc'
 
         # Build the pipeline
-        cmd = audio_src + ' ! audioconvert ! audioresample ! pocketsphinx name=asr ! appsink sync=false'
+        cmd = (
+            audio_src +
+            ' ! audioconvert' +
+            ' ! audioresample' +
+            ' ! pocketsphinx lm=' + language_file + ' dict=' +
+            dictionary_file + ' configured=true' +
+            ' ! appsink sync=false'
+        )
         try:
             self.pipeline = Gst.parse_launch(cmd)
         except Exception as e:
@@ -35,15 +42,10 @@ class Recognizer(GObject.GObject):
             print("You may need to install gstreamer1.0-pocketsphinx")
             raise e
 
+        # Process results from the pipeline with self.result()
         bus = self.pipeline.get_bus()
         bus.add_signal_watch()
-
-        # Get the Auto Speech Recognition piece
-        asr = self.pipeline.get_by_name('asr')
         bus.connect('message::element', self.result)
-        asr.set_property('lm', language_file)
-        asr.set_property('dict', dictionary_file)
-        asr.set_property('configured', True)
 
     def listen(self):
         self.pipeline.set_state(Gst.State.PLAYING)
