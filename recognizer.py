@@ -1,6 +1,7 @@
-# This is part of Blather
+# This is part of Kaylee
 # -- this code is licensed GPLv3
 # Copyright 2013 Jezra
+# Copyright 2015 Clayton G. Hobbs
 
 import gi
 gi.require_version('Gst', '1.0')

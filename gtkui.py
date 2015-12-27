@@ -1,6 +1,8 @@
-# This is part of Blather
+# This is part of Kaylee
 # -- this code is licensed GPLv3
 # Copyright 2013 Jezra
+# Copyright 2015 Clayton G. Hobbs
+
 import sys
 from gi.repository import GObject
 # Gtk
@@ -18,7 +20,7 @@ class UI(GObject.GObject):
         self.window = Gtk.Window(Gtk.WindowType.TOPLEVEL)
         self.window.connect("delete_event", self.delete_event)
         # Give the window a name
-        self.window.set_title("BlatherGtk")
+        self.window.set_title("Kaylee")
         self.window.set_resizable(False)
 
         layout = Gtk.VBox()

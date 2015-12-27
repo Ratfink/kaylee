@@ -1,3 +1,8 @@
+# This is part of Kaylee
+# -- this code is licensed GPLv3
+# Copyright 2013 Jezra
+# Copyright 2015 Clayton G. Hobbs
+
 import sys
 from gi.repository import GObject
 # Gtk
@@ -7,15 +12,17 @@ class UI(GObject.GObject):
     __gsignals__ = {
         'command' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_STRING,))
     }
+    idle_text = "Kaylee - Idle"
+    listening_text = "Kaylee - Listening"
 
     def __init__(self, args, continuous):
         GObject.GObject.__init__(self)
         self.continuous = continuous
 
         self.statusicon = Gtk.StatusIcon()
-        self.statusicon.set_title("Blather")
-        self.statusicon.set_name("Blather")
-        self.statusicon.set_tooltip_text("Blather - Idle")
+        self.statusicon.set_title("Kaylee")
+        self.statusicon.set_name("Kaylee")
+        self.statusicon.set_tooltip_text(self.idle_text)
         self.statusicon.set_has_tooltip(True)
         self.statusicon.connect("activate", self.continuous_toggle)
         self.statusicon.connect("popup-menu", self.popup_menu)
@@ -42,24 +49,25 @@ class UI(GObject.GObject):
         if checked:
             self.menu_listen.set_label("Listen")
             self.emit('command', "continuous_listen")
-            self.statusicon.set_tooltip_text("Blather - Listening")
+            self.statusicon.set_tooltip_text(self.listening_text)
             self.set_icon_active()
         else:
             self.set_icon_inactive()
-            self.statusicon.set_tooltip_text("Blather - Idle")
+            self.statusicon.set_tooltip_text(self.idle_text)
             self.emit('command', "continuous_stop")
 
     def toggle_listen(self, item):
         val = self.menu_listen.get_label()
         if val == "Listen":
+            self.set_icon_active()
             self.emit("command", "listen")
             self.menu_listen.set_label("Stop")
-            self.statusicon.set_tooltip_text("Blather - Listening")
+            self.statusicon.set_tooltip_text(self.listening_text)
         else:
-            self.icon_inactive()
+            self.set_icon_inactive()
             self.menu_listen.set_label("Listen")
             self.emit("command", "stop")
-            self.statusicon.set_tooltip_text("Blather - Idle")
+            self.statusicon.set_tooltip_text(self.idle_text)
 
     def popup_menu(self, item, button, time):
         self.menu.popup(None, None, Gtk.StatusIcon.position_menu, item, button, time)
@@ -81,8 +89,8 @@ class UI(GObject.GObject):
     def finished(self, text):
         if not self.menu_continuous.get_active():
             self.menu_listen.set_label("Listen")
-            self.statusicon.set_from_icon_name("blather_stopped")
-            self.statusicon.set_tooltip_text("Blather - Idle")
+            self.set_icon_inactive()
+            self.statusicon.set_tooltip_text(self.idle_text)
 
     def set_icon_active_asset(self, i):
         self.icon_active = i

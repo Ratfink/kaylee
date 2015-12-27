@@ -1,7 +1,9 @@
 #!/usr/bin/env python2
 
+# This is part of Kaylee
 # -- this code is licensed GPLv3
 # Copyright 2013 Jezra
+# Copyright 2015 Clayton G. Hobbs
 
 import sys
 import signal
@@ -13,6 +15,8 @@ try:
     import yaml
 except:
     print "YAML is not supported. ~/.config/blather/options.yaml will not function"
+
+from recognizer import Recognizer
 
 # Where are the files?
 conf_dir = os.path.expanduser("~/.config/blather")
@@ -31,7 +35,6 @@ class Blather:
 
     def __init__(self, opts):
         # Import the recognizer so Gst doesn't clobber our -h
-        from Recognizer import Recognizer
         self.ui = None
         self.options = {}
         ui_continuous_listen = False
@@ -51,23 +54,21 @@ class Blather:
                 self.options[k] = v
 
         if self.options['interface'] != None:
-            if self.options['interface'] == "q":
-                from QtUI import UI
-            elif self.options['interface'] == "g":
-                from GtkUI import UI
+            if self.options['interface'] == "g":
+                from gtkui import UI
             elif self.options['interface'] == "gt":
-                from GtkTrayUI import UI
+                from gtktrayui import UI
             else:
                 print "no GUI defined"
                 sys.exit()
 
             self.ui = UI(args, self.options['continuous'])
             self.ui.connect("command", self.process_command)
-            #can we load the icon resource?
+            # Can we load the icon resource?
             icon = self.load_resource("icon.png")
             if icon:
                 self.ui.set_icon_active_asset(icon)
-            #can we load the icon_inactive resource?
+            # Can we load the icon_inactive resource?
             icon_inactive = self.load_resource("icon_inactive.png")
             if icon_inactive:
                 self.ui.set_icon_inactive_asset(icon_inactive)
@@ -201,7 +202,7 @@ if __name__ == "__main__":
     parser = OptionParser()
     parser.add_option("-i", "--interface",  type="string", dest="interface",
             action='store',
-            help="Interface to use (if any). 'q' for Qt, 'g' for GTK, 'gt' for GTK system tray icon")
+            help="Interface to use (if any). 'g' for GTK or 'gt' for GTK system tray icon")
 
     parser.add_option("-c", "--continuous",
             action="store_true", dest="continuous", default=False,
