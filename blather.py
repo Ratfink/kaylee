@@ -12,23 +12,20 @@ import hashlib
 import os.path
 import subprocess
 from argparse import ArgumentParser
-from gi.repository import GObject
+from gi.repository import GObject, GLib
 import json
-try:
-    import yaml
-except:
-    print("YAML is not supported; unable to use config file")
 
 from recognizer import Recognizer
 
 # Where are the files?
-conf_dir = os.path.expanduser("~/.config/blather")
+conf_dir = os.path.expanduser(os.path.join(GLib.get_user_config_dir(),
+                                           "blather"))
 lang_dir = os.path.join(conf_dir, "language")
 command_file = os.path.join(conf_dir, "commands.conf")
 strings_file = os.path.join(conf_dir, "sentences.corpus")
 history_file = os.path.join(conf_dir, "blather.history")
 opt_file = os.path.join(conf_dir, "options.json")
-hash_file = os.path.join(conf_dir, "hash.yaml")
+hash_file = os.path.join(conf_dir, "hash.json")
 lang_file = os.path.join(lang_dir, 'lm')
 dic_file = os.path.join(lang_dir, 'dic')
 # Make the lang_dir if it doesn't exist
@@ -136,39 +133,31 @@ class Blather:
 
     def update_language(self):
         """Update the language if its hash has changed"""
+        # Load the stored hash from the hash file
         try:
-            # Load the stored hash from the hash file
-            try:
-                with open(hash_file, 'r') as f:
-                    text = f.read()
-                    hashes = yaml.load(text)
-                stored_hash = hashes['language']
-            except (IOError, KeyError, TypeError):
-                # No stored hash
-                stored_hash = ''
+            with open(hash_file, 'r') as f:
+                hashes = json.load(f)
+            stored_hash = hashes['language']
+        except (IOError, KeyError, TypeError):
+            # No stored hash
+            stored_hash = ''
 
-            # Calculate the hash the language file has right now
-            hasher = hashlib.sha256()
-            with open(strings_file, 'rb') as sfile:
-                buf = sfile.read()
-                hasher.update(buf)
-            new_hash = hasher.hexdigest()
+        # Calculate the hash the language file has right now
+        hasher = hashlib.sha256()
+        with open(strings_file, 'rb') as sfile:
+            buf = sfile.read()
+            hasher.update(buf)
+        new_hash = hasher.hexdigest()
 
-            # If the hashes differ
-            if stored_hash != new_hash:
-                # Update the language
-                # FIXME: Do this with Python, not Bash
-                self.run_command('./language_updater.sh')
-                # Store the new hash
-                new_hashes = {'language': new_hash}
-                with open(hash_file, 'w') as f:
-                    f.write(yaml.dump(new_hashes))
-        except Exception as e:
-            # Do nothing if the hash file cannot be loaded
-            # FIXME: This is kind of bad; maybe YAML should be mandatory.
-            print('error updating language')
-            print(e)
-            pass
+        # If the hashes differ
+        if stored_hash != new_hash:
+            # Update the language
+            # FIXME: Do this with Python, not Bash
+            self.run_command('./language_updater.sh')
+            # Store the new hash
+            new_hashes = {'language': new_hash}
+            with open(hash_file, 'w') as f:
+                json.dump(new_hashes, f)
 
     def run_command(self, cmd):
         """Print the command, then run it"""

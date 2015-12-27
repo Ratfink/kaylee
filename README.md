@@ -8,10 +8,9 @@ but adds a lot of features that go beyond the original purpose of Blather.
 ## Requirements
 
 1. pocketsphinx
-2. gstreamer-1.0 (and what ever plugin has pocket sphinx support)
-3. gstreamer-1.0 base plugins (required for alsa)
-5. pygtk (only required for the Gtk based UI)
-6. pyyaml (only required for reading the options file)
+2. gstreamer-1.0 (and what ever plugin has pocketsphinx support)
+3. gstreamer-1.0 base plugins (required for ALSA)
+4. python-gobject (required for GStreamer and the GTK-based UI)
 
 **Note:** it may also be required to install `pocketsphinx-hmm-en-hub4wsj`
 
@@ -36,7 +35,7 @@ directory and rename to file to 'dic'
 8. Start talking
 
 **Note:** to start Kaylee without needing to enter command line options all the
-time, copy options.yaml.tmp to ~/.config/blather/options.yaml and edit
+time, copy options.json.tmp to ~/.config/blather/options.json and edit
 accordingly.
 
 ### Bonus
