@@ -32,9 +32,9 @@ class Recognizer(GObject.GObject):
         cmd = audio_src+' ! audioconvert ! audioresample ! pocketsphinx name=asr ! appsink sync=false'
         try:
             self.pipeline=Gst.parse_launch( cmd )
-        except Exception, e:
-            print e.message
-            print "You may need to install gstreamer1.0-pocketsphinx"
+        except Exception as e:
+            print(e.message)
+            print("You may need to install gstreamer1.0-pocketsphinx")
             raise e
 
         bus = self.pipeline.get_bus()
@@ -63,4 +63,4 @@ class Recognizer(GObject.GObject):
         # If we have a final command, send it for processing
         command = msg_struct.get_string('hypothesis')
         if command != '' and msg_struct.get_boolean('final')[1]:
-	    self.emit("finished", command)
+            self.emit("finished", command)

@@ -5,16 +5,18 @@
 # Copyright 2013 Jezra
 # Copyright 2015 Clayton G. Hobbs
 
+from __future__ import print_function
 import sys
 import signal
-from gi.repository import GObject
+import hashlib
 import os.path
 import subprocess
 from optparse import OptionParser
+from gi.repository import GObject
 try:
     import yaml
 except:
-    print "YAML is not supported. ~/.config/blather/options.yaml will not function"
+    print("YAML is not supported; unable to use config file")
 
 from recognizer import Recognizer
 
@@ -25,8 +27,9 @@ command_file = os.path.join(conf_dir, "commands.conf")
 strings_file = os.path.join(conf_dir, "sentences.corpus")
 history_file = os.path.join(conf_dir, "blather.history")
 opt_file = os.path.join(conf_dir, "options.yaml")
-lang_file = os.path.join(lang_dir,'lm')
-dic_file = os.path.join(lang_dir,'dic')
+hash_file = os.path.join(conf_dir, "hash.yaml")
+lang_file = os.path.join(lang_dir, 'lm')
+dic_file = os.path.join(lang_dir, 'dic')
 # Make the lang_dir if it doesn't exist
 if not os.path.exists(lang_dir):
     os.makedirs(lang_dir)
@@ -34,7 +37,6 @@ if not os.path.exists(lang_dir):
 class Blather:
 
     def __init__(self, opts):
-        # Import the recognizer so Gst doesn't clobber our -h
         self.ui = None
         self.options = {}
         ui_continuous_listen = False
@@ -48,8 +50,8 @@ class Blather:
         # Load the options file
         self.load_options()
 
-        # Merge the opts
-        for k,v in opts.__dict__.items():
+        # Merge the options with the ones provided by command-line arguments
+        for k, v in opts.__dict__.items():
             if (not k in self.options) or opts.override:
                 self.options[k] = v
 
@@ -59,7 +61,7 @@ class Blather:
             elif self.options['interface'] == "gt":
                 from gtktrayui import UI
             else:
-                print "no GUI defined"
+                print("no GUI defined")
                 sys.exit()
 
             self.ui = UI(args, self.options['continuous'])
@@ -76,47 +78,51 @@ class Blather:
         if self.options['history']:
             self.history = []
 
+        # Update the language if necessary
+        self.update_language()
+
         # Create the recognizer
         try:
             self.recognizer = Recognizer(lang_file, dic_file, self.options['microphone'])
-        except Exception, e:
-            #no recognizer? bummer
-            print 'error making recognizer'
+        except Exception as e:
+            # No recognizer? bummer
+            print('error making recognizer')
             sys.exit()
 
         self.recognizer.connect('finished', self.recognizer_finished)
 
-        print "Using Options: ", self.options
+        print("Using Options: ", self.options)
 
     def read_commands(self):
         # Read the commands file
         file_lines = open(command_file)
         strings = open(strings_file, "w")
         for line in file_lines:
-            print line
+            print(line)
             # Trim the white spaces
             line = line.strip()
             # If the line has length and the first char isn't a hash
             if len(line) and line[0]!="#":
                 # This is a parsible line
-                (key,value) = line.split(":",1)
-                print key, value
+                (key, value) = line.split(":", 1)
+                print(key, value)
                 self.commands[key.strip().lower()] = value.strip()
                 strings.write( key.strip()+"\n")
         # Close the strings file
         strings.close()
 
     def load_options(self):
+        """If possible, load options from the options.yaml file"""
         # Is there an opt file?
         try:
             opt_fh = open(opt_file)
             text = opt_fh.read()
             self.options = yaml.load(text)
         except:
+            # Do nothing if the options file cannot be loaded
             pass
 
-
-    def log_history(self,text):
+    def log_history(self, text):
         if self.options['history']:
             self.history.append(text)
             if len(self.history) > self.options['history']:
@@ -130,9 +136,45 @@ class Blather:
             # Close the file
             hfile.close()
 
+    def update_language(self):
+        """Update the language if its hash has changed"""
+        try:
+            # Load the stored hash from the hash file
+            try:
+                with open(hash_file, 'r') as f:
+                    text = f.read()
+                    hashes = yaml.load(text)
+                stored_hash = hashes['language']
+            except (IOError, KeyError, TypeError):
+                # No stored hash
+                stored_hash = ''
+
+            # Calculate the hash the language file has right now
+            hasher = hashlib.sha256()
+            with open(strings_file, 'rb') as sfile:
+                buf = sfile.read()
+                hasher.update(buf)
+            new_hash = hasher.hexdigest()
+
+            # If the hashes differ
+            if stored_hash != new_hash:
+                # Update the language
+                # FIXME: Do this with Python, not Bash
+                self.run_command('./language_updater.sh')
+                # Store the new hash
+                new_hashes = {'language': new_hash}
+                with open(hash_file, 'w') as f:
+                    f.write(yaml.dump(new_hashes))
+        except Exception as e:
+            # Do nothing if the hash file cannot be loaded
+            # FIXME: This is kind of bad; maybe YAML should be mandatory.
+            print('error updating language')
+            print(e)
+            pass
+
     def run_command(self, cmd):
-        '''Print the command, then run it'''
-        print cmd
+        """Print the command, then run it"""
+        print(cmd)
         subprocess.call(cmd, shell=True)
 
     def recognizer_finished(self, recognizer, text):
@@ -154,7 +196,7 @@ class Blather:
             # Run the invalid_sentence_command if there is an invalid sentence command
             if self.options['invalid_sentence_command']:
                 subprocess.call(self.options['invalid_sentence_command'], shell=True)
-            print "no matching command %s" % t
+            print("no matching command {0}".format(t))
         # If there is a UI and we are not continuous listen
         if self.ui:
             if not self.continuous_listen:
@@ -173,7 +215,7 @@ class Blather:
         sys.exit()
 
     def process_command(self, UI, command):
-        print command
+        print(command)
         if command == "listen":
             self.recognizer.listen()
         elif command == "stop":
@@ -187,9 +229,9 @@ class Blather:
         elif command == "quit":
             self.quit()
 
-    def load_resource(self,string):
+    def load_resource(self, string):
         local_data = os.path.join(os.path.dirname(__file__), 'data')
-        paths = ["/usr/share/blather/","/usr/local/share/blather", local_data]
+        paths = ["/usr/share/blather/", "/usr/local/share/blather", local_data]
         for path in paths:
             resource = os.path.join(path, string)
             if os.path.exists( resource ):
@@ -247,7 +289,7 @@ if __name__ == "__main__":
     try:
         main_loop.run()
     except:
-        print "time to quit"
+        print("time to quit")
         main_loop.quit()
         sys.exit()
 
