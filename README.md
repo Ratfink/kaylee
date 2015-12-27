@@ -41,8 +41,11 @@ accordingly.
 
 ### Bonus
 
-Once the sentences.corpus file has been created, run the language_updater.sh
-script to automate the process of creating and downloading language files.
+~Once the sentences.corpus file has been created, run the language_updater.sh
+script to automate the process of creating and downloading language files.~
+
+Kaylee now updates the language automatically.  You should never need to run
+language_updater.sh manually.
 
 ### Examples
 
