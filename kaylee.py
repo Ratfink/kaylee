@@ -19,7 +19,7 @@ from config import Config
 from languageupdater import LanguageUpdater
 
 
-class Blather:
+class Kaylee:
 
     def __init__(self):
         self.ui = None
@@ -90,7 +90,7 @@ class Blather:
                 # Pop off the first item
                 self.history.pop(0)
 
-            # Open and truncate the blather history file
+            # Open and truncate the history file
             hfile = open(self.config.history_file, "w")
             for line in self.history:
                 hfile.write(line + "\n")
@@ -134,7 +134,7 @@ class Blather:
         if self.ui:
             self.ui.run()
         else:
-            blather.recognizer.listen()
+            self.recognizer.listen()
 
     def quit(self):
         sys.exit()
@@ -156,7 +156,7 @@ class Blather:
 
     def load_resource(self, string):
         local_data = os.path.join(os.path.dirname(__file__), 'data')
-        paths = ["/usr/share/blather/", "/usr/local/share/blather", local_data]
+        paths = ["/usr/share/kaylee/", "/usr/local/share/kaylee", local_data]
         for path in paths:
             resource = os.path.join(path, string)
             if os.path.exists(resource):
@@ -166,16 +166,16 @@ class Blather:
 
 
 if __name__ == "__main__":
-    # Make our blather object
-    blather = Blather()
+    # Make our kaylee object
+    kaylee = Kaylee()
     # Init gobject threads
     GObject.threads_init()
     # We want a main loop
     main_loop = GObject.MainLoop()
     # Handle sigint
     signal.signal(signal.SIGINT, signal.SIG_DFL)
-    # Run the blather
-    blather.run()
+    # Run the kaylee
+    kaylee.run()
     # Start the main loop
     try:
         main_loop.run()
