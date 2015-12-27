@@ -17,19 +17,6 @@ import json
 from recognizer import Recognizer
 from config import Config
 
-# Where are the files?
-conf_dir = os.path.expanduser(os.path.join(GLib.get_user_config_dir(),
-                                           "blather"))
-lang_dir = os.path.join(conf_dir, "language")
-command_file = os.path.join(conf_dir, "commands.conf")
-strings_file = os.path.join(conf_dir, "sentences.corpus")
-history_file = os.path.join(conf_dir, "blather.history")
-hash_file = os.path.join(conf_dir, "hash.json")
-lang_file = os.path.join(lang_dir, 'lm')
-dic_file = os.path.join(lang_dir, 'dic')
-# Make the lang_dir if it doesn't exist
-if not os.path.exists(lang_dir):
-    os.makedirs(lang_dir)
 
 class Blather:
 
@@ -41,12 +28,12 @@ class Blather:
 
         self.commands = {}
 
-        # Read the commands
-        self.read_commands()
-
-        # Load the options file
+        # Load configuration
         self.config = Config()
         self.options = vars(self.config.options)
+
+        # Read the commands
+        self.read_commands()
 
         if self.options['interface'] != None:
             if self.options['interface'] == "g":
@@ -75,24 +62,18 @@ class Blather:
         self.update_language()
 
         # Create the recognizer
-        try:
-            self.recognizer = Recognizer(lang_file, dic_file, self.options['microphone'])
-        except Exception as e:
-            # No recognizer? bummer
-            print('error making recognizer')
-            sys.exit()
-
+        self.recognizer = Recognizer(self.config)
         self.recognizer.connect('finished', self.recognizer_finished)
 
     def read_commands(self):
         # Read the commands file
-        file_lines = open(command_file)
-        strings = open(strings_file, "w")
+        file_lines = open(self.config.command_file)
+        strings = open(self.config.strings_file, "w")
         for line in file_lines:
             # Trim the white spaces
             line = line.strip()
             # If the line has length and the first char isn't a hash
-            if len(line) and line[0]!="#":
+            if len(line) and line[0] != "#":
                 # This is a parsible line
                 (key, value) = line.split(":", 1)
                 self.commands[key.strip().lower()] = value.strip()
@@ -108,7 +89,7 @@ class Blather:
                 self.history.pop(0)
 
             # Open and truncate the blather history file
-            hfile = open(history_file, "w")
+            hfile = open(self.config.history_file, "w")
             for line in self.history:
                 hfile.write(line + "\n")
             # Close the file
@@ -118,7 +99,7 @@ class Blather:
         """Update the language if its hash has changed"""
         # Load the stored hash from the hash file
         try:
-            with open(hash_file, 'r') as f:
+            with open(self.config.hash_file, 'r') as f:
                 hashes = json.load(f)
             stored_hash = hashes['language']
         except (IOError, KeyError, TypeError):
@@ -127,7 +108,7 @@ class Blather:
 
         # Calculate the hash the language file has right now
         hasher = hashlib.sha256()
-        with open(strings_file, 'rb') as sfile:
+        with open(self.config.strings_file, 'rb') as sfile:
             buf = sfile.read()
             hasher.update(buf)
         new_hash = hasher.hexdigest()
@@ -139,7 +120,7 @@ class Blather:
             self.run_command('./language_updater.sh')
             # Store the new hash
             new_hashes = {'language': new_hash}
-            with open(hash_file, 'w') as f:
+            with open(self.config.hash_file, 'w') as f:
                 json.dump(new_hashes, f)
 
     def run_command(self, cmd):

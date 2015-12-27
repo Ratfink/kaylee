@@ -1,10 +1,11 @@
 #!/bin/bash
 
-blatherdir=~/.config/blather
-sentences=$blatherdir/sentences.corpus
+blatherdir=~/.config/kaylee
+blatherdatadir=~/.local/share/kaylee
+blathercachedir=~/.cache/kaylee
+sentences=$blatherdatadir/sentences.corpus
 sourcefile=$blatherdir/commands.conf
-langdir=$blatherdir/language
-tempfile=$blatherdir/url.txt
+tempfile=$blathercachedir/url.txt
 lmtoolurl=http://www.speech.cs.cmu.edu/cgi-bin/tools/lmtool/run
 
 cd $blatherdir
@@ -25,7 +26,7 @@ curl -C - -O $(cat $tempfile).dic
 curl -C - -O $(cat $tempfile).lm
 
 # mv em to the right name/place
-mv *.dic $langdir/dic
-mv *.lm $langdir/lm
+mv *.dic $blatherdatadir/dic
+mv *.lm $blatherdatadir/lm
 
 rm $tempfile

@@ -18,11 +18,13 @@ class Recognizer(GObject.GObject):
         'finished' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_STRING,))
     }
 
-    def __init__(self, language_file, dictionary_file, src=None):
+    def __init__(self, config):
         GObject.GObject.__init__(self)
         self.commands = {}
+
+        src = config.options.microphone
         if src:
-            audio_src = 'alsasrc device="hw:%d,0"' % (src)
+            audio_src = 'alsasrc device="hw:{0},0"'.format(src)
         else:
             audio_src = 'autoaudiosrc'
 
@@ -31,8 +33,8 @@ class Recognizer(GObject.GObject):
             audio_src +
             ' ! audioconvert' +
             ' ! audioresample' +
-            ' ! pocketsphinx lm=' + language_file + ' dict=' +
-            dictionary_file + ' configured=true' +
+            ' ! pocketsphinx lm=' + config.lang_file + ' dict=' +
+            config.dic_file + ' configured=true' +
             ' ! appsink sync=false'
         )
         try:
