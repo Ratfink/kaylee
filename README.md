@@ -17,34 +17,20 @@ but adds a lot of features that go beyond the original purpose of Blather.
 
 ## Usage
 
-1. Move commands.tmp to ~/.config/blather/commands.conf and fill the file with
+1. Move commands.tmp to ~/.config/kaylee/commands.conf and fill the file with
 sentences and command to run
-2. Run blather.py, this will generate ~/.config/blather/sentences.corpus based
-on sentences in the 'commands' file
-3. Quit Kaylee (there is a good chance it will just segfault)
-4. Go to <http://www.speech.cs.cmu.edu/tools/lmtool.html> and upload the
-sentences.corpus file
-5. Download the resulting XXXX.lm file to the ~/.config/blather/language
-directory and rename to file to 'lm'
-6. Download the resulting XXXX.dic file to the ~/.config/blather/language
-directory and rename to file to 'dic'
-7. Run blather.py
+2. Run blather.py.  This will generate ~/.local/share/kaylee/sentences.corpus
+based on sentences in the 'commands' file, then use
+<http://www.speech.cs.cmu.edu/tools/lmtool.html> to create and save a new
+language model and dictionary.
     * For GTK UI, run blather.py -i g
     * To start a UI in 'continuous' listen mode, use the -c flag
     * To use a microphone other than the system default, use the -m flag
-8. Start talking
+3. Start talking
 
 **Note:** to start Kaylee without needing to enter command line options all the
-time, copy options.json.tmp to ~/.config/blather/options.json and edit
+time, copy options.json.tmp to ~/.config/kaylee/options.json and edit
 accordingly.
-
-### Bonus
-
-~~Once the sentences.corpus file has been created, run the language_updater.sh
-script to automate the process of creating and downloading language files.~~
-
-Kaylee now updates the language automatically.  You should never need to run
-language_updater.sh manually.
 
 ### Examples
 

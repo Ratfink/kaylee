@@ -16,6 +16,7 @@ import json
 
 from recognizer import Recognizer
 from config import Config
+from languageupdater import LanguageUpdater
 
 
 class Blather:
@@ -35,7 +36,7 @@ class Blather:
         # Read the commands
         self.read_commands()
 
-        if self.options['interface'] != None:
+        if self.options['interface']:
             if self.options['interface'] == "g":
                 from gtkui import UI
             elif self.options['interface'] == "gt":
@@ -59,7 +60,8 @@ class Blather:
             self.history = []
 
         # Update the language if necessary
-        self.update_language()
+        self.language_updater = LanguageUpdater(self.config)
+        self.language_updater.update_language_if_changed()
 
         # Create the recognizer
         self.recognizer = Recognizer(self.config)
@@ -94,34 +96,6 @@ class Blather:
                 hfile.write(line + "\n")
             # Close the file
             hfile.close()
-
-    def update_language(self):
-        """Update the language if its hash has changed"""
-        # Load the stored hash from the hash file
-        try:
-            with open(self.config.hash_file, 'r') as f:
-                hashes = json.load(f)
-            stored_hash = hashes['language']
-        except (IOError, KeyError, TypeError):
-            # No stored hash
-            stored_hash = ''
-
-        # Calculate the hash the language file has right now
-        hasher = hashlib.sha256()
-        with open(self.config.strings_file, 'rb') as sfile:
-            buf = sfile.read()
-            hasher.update(buf)
-        new_hash = hasher.hexdigest()
-
-        # If the hashes differ
-        if stored_hash != new_hash:
-            # Update the language
-            # FIXME: Do this with Python, not Bash
-            self.run_command('./language_updater.sh')
-            # Store the new hash
-            new_hashes = {'language': new_hash}
-            with open(self.config.hash_file, 'w') as f:
-                json.dump(new_hashes, f)
 
     def run_command(self, cmd):
         """Print the command, then run it"""
