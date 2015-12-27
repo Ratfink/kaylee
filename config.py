@@ -74,9 +74,7 @@ class Config:
         self._read_options_file()
 
         # Parse command-line arguments, overriding config file as appropriate
-        self.args = self.parser.parse_args(namespace=self.options)
-        print(self.args)
-        print(self.options)
+        self.parser.parse_args(namespace=self.options)
 
     def _make_dir(self, directory):
         if not os.path.exists(directory):
