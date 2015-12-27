@@ -10,7 +10,6 @@ but adds a lot of features that go beyond the original purpose of Blather.
 1. pocketsphinx
 2. gstreamer-1.0 (and what ever plugin has pocket sphinx support)
 3. gstreamer-1.0 base plugins (required for alsa)
-4. pyside (only required for the Qt based UI)
 5. pygtk (only required for the Gtk based UI)
 6. pyyaml (only required for reading the options file)
 
@@ -26,7 +25,6 @@ but adds a lot of features that go beyond the original purpose of Blather.
 4. Download the resulting XXXX.lm file to the ~/.config/blather/language directory and rename to file to 'lm'
 5. Download the resulting XXXX.dic file to the ~/.config/blather/language directory and rename to file to 'dic'
 6. Run Blather.py
-    * For Qt GUI, run Blather.py -i q
     * For Gtk GUI, run Blather.py -i g
     * To start a UI in 'continuous' listen mode, use the -c flag
     * To use a microphone other than the system default, use the -m flag
