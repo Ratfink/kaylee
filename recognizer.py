@@ -3,16 +3,14 @@
 # Copyright 2013 Jezra
 # Copyright 2015 Clayton G. Hobbs
 
+import os.path
+import sys
+
 import gi
 gi.require_version('Gst', '1.0')
 from gi.repository import GObject, Gst
 GObject.threads_init()
 Gst.init(None)
-import os.path
-import sys
-
-# Define some global variables
-this_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 class Recognizer(GObject.GObject):
@@ -20,7 +18,7 @@ class Recognizer(GObject.GObject):
         'finished' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_STRING,))
     }
 
-    def __init__(self, language_file, dictionary_file, src = None):
+    def __init__(self, language_file, dictionary_file, src=None):
         GObject.GObject.__init__(self)
         self.commands = {}
         if src:
@@ -41,7 +39,7 @@ class Recognizer(GObject.GObject):
         bus.add_signal_watch()
 
         # Get the Auto Speech Recognition piece
-        asr=self.pipeline.get_by_name('asr')
+        asr = self.pipeline.get_by_name('asr')
         bus.connect('message::element', self.result)
         asr.set_property('lm', language_file)
         asr.set_property('dict', dictionary_file)

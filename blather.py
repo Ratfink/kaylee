@@ -11,11 +11,11 @@ import signal
 import hashlib
 import os.path
 import subprocess
-from argparse import ArgumentParser
 from gi.repository import GObject, GLib
 import json
 
 from recognizer import Recognizer
+from config import Config
 
 # Where are the files?
 conf_dir = os.path.expanduser(os.path.join(GLib.get_user_config_dir(),
@@ -24,7 +24,6 @@ lang_dir = os.path.join(conf_dir, "language")
 command_file = os.path.join(conf_dir, "commands.conf")
 strings_file = os.path.join(conf_dir, "sentences.corpus")
 history_file = os.path.join(conf_dir, "blather.history")
-opt_file = os.path.join(conf_dir, "options.json")
 hash_file = os.path.join(conf_dir, "hash.json")
 lang_file = os.path.join(lang_dir, 'lm')
 dic_file = os.path.join(lang_dir, 'dic')
@@ -34,7 +33,7 @@ if not os.path.exists(lang_dir):
 
 class Blather:
 
-    def __init__(self, opts):
+    def __init__(self):
         self.ui = None
         self.options = {}
         ui_continuous_listen = False
@@ -46,13 +45,8 @@ class Blather:
         self.read_commands()
 
         # Load the options file
-        self.load_options()
-
-        print(opts)
-        # Merge the options with the ones provided by command-line arguments
-        for k, v in vars(opts).items():
-            if v is not None:
-                self.options[k] = v
+        self.config = Config()
+        self.options = vars(self.config.options)
 
         if self.options['interface'] != None:
             if self.options['interface'] == "g":
@@ -63,7 +57,7 @@ class Blather:
                 print("no GUI defined")
                 sys.exit()
 
-            self.ui = UI(args, self.options['continuous'])
+            self.ui = UI(self.options, self.options['continuous'])
             self.ui.connect("command", self.process_command)
             # Can we load the icon resource?
             icon = self.load_resource("icon.png")
@@ -109,13 +103,6 @@ class Blather:
                 strings.write(key.strip() + "\n")
         # Close the strings file
         strings.close()
-
-    def load_options(self):
-        """Load options from the options.json file"""
-        # Is there an opt file?
-        with open(opt_file, 'r') as f:
-            self.options = json.load(f)
-            print(self.options)
 
     def log_history(self, text):
         if self.options['history']:
@@ -228,38 +215,8 @@ class Blather:
 
 
 if __name__ == "__main__":
-    parser = ArgumentParser()
-    parser.add_argument("-i", "--interface",  type=str, dest="interface",
-            action='store',
-            help="Interface to use (if any). 'g' for GTK or 'gt' for GTK system tray icon")
-
-    parser.add_argument("-c", "--continuous",
-            action="store_true", dest="continuous", default=False,
-            help="starts interface with 'continuous' listen enabled")
-
-    parser.add_argument("-p", "--pass-words",
-            action="store_true", dest="pass_words", default=False,
-            help="passes the recognized words as arguments to the shell command")
-
-    parser.add_argument("-H", "--history", type=int,
-            action="store", dest="history",
-            help="number of commands to store in history file")
-
-    parser.add_argument("-m", "--microphone", type=int,
-            action="store", dest="microphone", default=None,
-            help="Audio input card to use (if other than system default)")
-
-    parser.add_argument("--valid-sentence-command",  type=str, dest="valid_sentence_command",
-            action='store',
-            help="command to run when a valid sentence is detected")
-
-    parser.add_argument("--invalid-sentence-command",  type=str, dest="invalid_sentence_command",
-            action='store',
-            help="command to run when an invalid sentence is detected")
-
-    args = parser.parse_args()
     # Make our blather object
-    blather = Blather(args)
+    blather = Blather()
     # Init gobject threads
     GObject.threads_init()
     # We want a main loop
