@@ -55,13 +55,15 @@ class LanguageUpdater:
         r = requests.post(url, files=files, data=values)
 
         # Parse response to get URLs of the files we need
+        path_re = r'.*<title>Index of (.*?)</title>.*'
+        number_re = r'.*TAR[0-9]*?\.tgz.*'
         for line in r.text.split('\n'):
             # If we found the directory, keep it and don't break
-            if re.search(r'.*<title>Index of (.*?)</title>.*', line):
-                path = host + re.sub(r'.*<title>Index of (.*?)</title>.*', r'\1', line)
+            if re.search(path_re, line):
+                path = host + re.sub(path_re, r'\1', line)
             # If we found the number, keep it and break
-            elif re.search(r'.*TAR[0-9]*?\.tgz.*', line):
-                number = re.sub(r'.*TAR([0-9]*?)\.tgz.*', r'\1', line)
+            elif re.search(number_re, line):
+                number = re.sub(number_re, r'\1', line)
                 break
 
         lm_url = path + '/' + number + '.lm'
