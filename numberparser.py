@@ -65,20 +65,20 @@ class NumberParser:
 
     def __init__(self):
         self.number_words = []
-        for word in self.zero:
+        for word in sorted(self.zero.keys()):
             self.number_words.append(word)
-        for word in self.ones:
+        for word in sorted(self.ones.keys()):
             self.number_words.append(word)
-        for word in self.special_ones:
+        for word in sorted(self.special_ones.keys()):
             self.number_words.append(word)
-        for word in self.tens:
+        for word in sorted(self.tens.keys()):
             self.number_words.append(word)
-        for word in self.hundred:
+        for word in sorted(self.hundred.keys()):
             self.number_words.append(word)
-        for word in self.exp:
+        for word in sorted(self.exp.keys()):
             self.number_words.append(word)
         self.mandatory_number_words = self.number_words.copy()
-        for word in self.allowed:
+        for word in sorted(self.allowed):
             self.number_words.append(word)
 
     def parse_number(self, text_line):
