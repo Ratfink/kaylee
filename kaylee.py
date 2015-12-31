@@ -2,8 +2,8 @@
 
 # This is part of Kaylee
 # -- this code is licensed GPLv3
-# Copyright 2013 Jezra
 # Copyright 2015 Clayton G. Hobbs
+# Portions Copyright 2013 Jezra
 
 from __future__ import print_function
 import sys
@@ -17,6 +17,7 @@ import json
 from recognizer import Recognizer
 from config import Config
 from languageupdater import LanguageUpdater
+from numberparser import NumberParser
 
 
 class Kaylee:
@@ -32,6 +33,9 @@ class Kaylee:
         # Load configuration
         self.config = Config()
         self.options = vars(self.config.options)
+
+        # Create number parser for later use
+        self.number_parser = NumberParser()
 
         # Read the commands
         self.read_commands()
@@ -79,7 +83,10 @@ class Kaylee:
                 # This is a parsible line
                 (key, value) = line.split(":", 1)
                 self.commands[key.strip().lower()] = value.strip()
-                strings.write(key.strip() + "\n")
+                strings.write(key.strip().replace('%d', '') + "\n")
+        # Add number words to the corpus
+        for word in self.number_parser.number_words:
+            strings.write(word + "\n")
         # Close the strings file
         strings.close()
 
@@ -104,6 +111,7 @@ class Kaylee:
 
     def recognizer_finished(self, recognizer, text):
         t = text.lower()
+        numt, nums = self.number_parser.parse_all_numbers(t)
         # Is there a matching command?
         if t in self.commands:
             # Run the valid_sentence_command if there is a valid sentence command
@@ -113,9 +121,18 @@ class Kaylee:
             # Should we be passing words?
             if self.options['pass_words']:
                 cmd += " " + t
-                self.run_command(cmd)
-            else:
-                self.run_command(cmd)
+            self.run_command(cmd)
+            self.log_history(text)
+        elif numt in self.commands:
+            # Run the valid_sentence_command if there is a valid sentence command
+            if self.options['valid_sentence_command']:
+                subprocess.call(self.options['valid_sentence_command'], shell=True)
+            cmd = self.commands[numt]
+            cmd = cmd.format(*nums)
+            # Should we be passing words?
+            if self.options['pass_words']:
+                cmd += " " + t
+            self.run_command(cmd)
             self.log_history(text)
         else:
             # Run the invalid_sentence_command if there is an invalid sentence command

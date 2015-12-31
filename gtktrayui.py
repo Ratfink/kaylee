@@ -1,7 +1,7 @@
 # This is part of Kaylee
 # -- this code is licensed GPLv3
-# Copyright 2013 Jezra
 # Copyright 2015 Clayton G. Hobbs
+# Portions Copyright 2013 Jezra
 
 import sys
 import gi

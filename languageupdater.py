@@ -1,7 +1,7 @@
 # This is part of Kaylee
 # -- this code is licensed GPLv3
-# Copyright 2013 Jezra
 # Copyright 2015 Clayton G. Hobbs
+# Portions Copyright 2013 Jezra
 
 import hashlib
 import json
@@ -56,7 +56,7 @@ class LanguageUpdater:
 
         # Parse response to get URLs of the files we need
         path_re = r'.*<title>Index of (.*?)</title>.*'
-        number_re = r'.*TAR[0-9]*?\.tgz.*'
+        number_re = r'.*TAR([0-9]*?)\.tgz.*'
         for line in r.text.split('\n'):
             # If we found the directory, keep it and don't break
             if re.search(path_re, line):
