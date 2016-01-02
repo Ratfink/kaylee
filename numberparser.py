@@ -139,44 +139,41 @@ class NumberParser:
     def parse_all_numbers(self, text_line):
         nums = []
         t_numless = ''
-        current_num = ''
 
         # Split text_line by commas, whitespace, and hyphens
-        text_line = text_line.strip()
-        text_words = re.split(r'[,\s-]+', text_line)
+        text_words = re.split(r'[,\s-]+', text_line.strip())
+        # Get a string of word classes
+        tw_classes = ''
         for word in text_words:
-            # If we aren't starting a number, add the word to the result string
-            if word not in self.mandatory_number_words:
-                if current_num:
-                    if word in self.number_words:
-                        current_num += word + ' '
-                    else:
-                        try:
-                            nums.append(self.parse_number(current_num))
-                        except ValueError:
-                            nums.append(-1)
-                        current_num = ''
-                        t_numless += '%d' + ' '
-                if not current_num:
-                    t_numless += word + ' '
+            if word in self.mandatory_number_words:
+                tw_classes += 'm'
+            elif word in self.allowed:
+                tw_classes += 'a'
             else:
-                # We're parsing a number now
-                current_num += word + ' '
-        if current_num:
+                tw_classes += 'w'
+
+        # For each string of number words:
+        last_end = 0
+        for m in re.finditer('m[am]*m|m', tw_classes):
+            # Get the number words
+            num_words = ' '.join(text_words[m.start():m.end()])
+            # Parse the number and store the value
             try:
-                nums.append(self.parse_number(current_num))
+                nums.append(self.parse_number(num_words))
             except ValueError:
                 nums.append(-1)
-            current_num = ''
-            t_numless += '%d' + ' '
+            # Add words to t_numless
+            t_numless += ' '.join(text_words[last_end:m.start()]) + ' %d '
+            last_end = m.end()
+        t_numless += ' '.join(text_words[last_end:])
 
         return (t_numless.strip(), nums)
 
 if __name__ == '__main__':
     np = NumberParser()
     # Get the words to translate
-    text_line = input('Enter a number: ')
+    text_line = input('Enter a string: ')
     # Parse it to an integer
     value = np.parse_all_numbers(text_line)
     # Print the result
-    print('I claim that you meant the decimal number', value)
+    print(value)
