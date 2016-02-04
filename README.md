@@ -19,10 +19,10 @@ but adds a lot of features that go beyond the original purpose of Blather.
 ## Usage
 
 1. Move commands.tmp to ~/.config/kaylee/commands.conf and fill the file with
-sentences and command to run
+sentences and commands to run
 2. Run kaylee.py.  This will generate ~/.local/share/kaylee/sentences.corpus
-based on sentences in the 'commands' file, then use
-<http://www.speech.cs.cmu.edu/tools/lmtool.html> to create and save a new
+based on sentences in the 'commands' file, then use the [Sphinx Knowledge Base
+Tool](http://www.speech.cs.cmu.edu/tools/lmtool.html) to create and save a new
 language model and dictionary.
     * For GTK UI, run kaylee.py -i g
     * To start a UI in 'continuous' listen mode, use the -c flag
@@ -35,26 +35,27 @@ accordingly.
 
 ### Examples
 
-* To run Kaylee with the GTK UI and start in continuous listen mode:
-`./kaylee.py -i g -c`
+* To run Kaylee with the GTK UI, starting in continuous listen mode:
+  `./kaylee.py -i g -c`
 
-* To run Kaylee with no UI and using a USB microphone recognized and device 2:
-`./kaylee.py -m 2`
+* To run Kaylee with no UI and using a USB microphone recognized as device 2:
+  `./kaylee.py -m 2`
 
 * To have Kaylee pass the matched sentence to the executed command:
-`./kaylee.py -p`
+  `./kaylee.py -p`
 
-**explanation:** if the commands.conf contains:
-`good morning world: example_command.sh`
-then 3 arguments, 'good', 'morning', and 'world' would get passed to
-example_command.sh as `example_command.sh good morning world`
+  **Explanation:** if the commands.conf contains the line:
+
+        good morning world: example_command.sh
+
+  Then three arguments, 'good', 'morning', and 'world', would get passed to
+  example_command.sh as `example_command.sh good morning world`.
 
 * To run a command when a valid sentence has been detected:
-	`./kaylee.py --valid-sentence-command=/path/to/command`
-	**note:** this can be set in the options.yml file
+  `./kaylee.py --valid-sentence-command=/path/to/command`
+
 * To run a command when a invalid sentence has been detected:
-	`./kaylee.py --invalid-sentence-command=/path/to/command`
-	**note:** this can be set in the options.yml file
+  `./kaylee.py --invalid-sentence-command=/path/to/command`
 
 ### Finding the Device Number of a USB microphone
 There are a few ways to find the device number of a USB microphone.
