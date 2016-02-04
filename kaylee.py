@@ -73,15 +73,13 @@ class Kaylee:
 
     def create_strings_file(self):
         # Open the strings file
-        strings = open(self.config.strings_file, "w")
-        # Add command words to the corpus
-        for voice_cmd in sorted(self.commands.keys()):
-            strings.write(voice_cmd.strip().replace('%d', '') + "\n")
-        # Add number words to the corpus
-        for word in self.number_parser.number_words:
-            strings.write(word + "\n")
-        # Close the strings file
-        strings.close()
+        with open(self.config.strings_file, 'w') as strings:
+            # Add command words to the corpus
+            for voice_cmd in sorted(self.commands.keys()):
+                strings.write(voice_cmd.strip().replace('%d', '') + "\n")
+            # Add number words to the corpus
+            for word in self.number_parser.number_words:
+                strings.write(word + "\n")
 
     def log_history(self, text):
         if self.options['history']:
@@ -91,11 +89,9 @@ class Kaylee:
                 self.history.pop(0)
 
             # Open and truncate the history file
-            hfile = open(self.config.history_file, "w")
-            for line in self.history:
-                hfile.write(line + "\n")
-            # Close the file
-            hfile.close()
+            with open(self.config.history_file, 'w') as hfile:
+                for line in self.history:
+                    hfile.write(line + '\n')
 
     def run_command(self, cmd):
         """Print the command, then run it"""

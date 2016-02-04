@@ -47,17 +47,19 @@ class LanguageUpdater:
         host = 'http://www.speech.cs.cmu.edu'
         url = host + '/cgi-bin/tools/lmtool/run'
 
-        # Prepare request
-        files = {'corpus': open(self.config.strings_file, 'rb')}
-        values = {'formtype': 'simple'}
+        # Submit the corpus to the lmtool
+        response_text = ""
+        with open(self.config.strings_file, 'rb') as corpus:
+            files = {'corpus': corpus}
+            values = {'formtype': 'simple'}
 
-        # Send corpus to the server
-        r = requests.post(url, files=files, data=values)
+            r = requests.post(url, files=files, data=values)
+            response_text = r.text
 
         # Parse response to get URLs of the files we need
         path_re = r'.*<title>Index of (.*?)</title>.*'
         number_re = r'.*TAR([0-9]*?)\.tgz.*'
-        for line in r.text.split('\n'):
+        for line in response_text.split('\n'):
             # If we found the directory, keep it and don't break
             if re.search(path_re, line):
                 path = host + re.sub(path_re, r'\1', line)
