@@ -18,20 +18,19 @@ but adds a lot of features that go beyond the original purpose of Blather.
 
 ## Usage
 
-1. Move commands.tmp to ~/.config/kaylee/commands.conf and fill the file with
-sentences and commands to run
+1. Move options.json.tmp to ~/.config/kaylee/options.json and fill the
+   "commands" section of the file with sentences to speak and commands to run.
 2. Run kaylee.py.  This will generate ~/.local/share/kaylee/sentences.corpus
-based on sentences in the 'commands' file, then use the [Sphinx Knowledge Base
-Tool](http://www.speech.cs.cmu.edu/tools/lmtool.html) to create and save a new
-language model and dictionary.
+   based on sentences in the "commands" section of options.json, then use the
+   [Sphinx Knowledge Base Tool](http://www.speech.cs.cmu.edu/tools/lmtool.html)
+   to create and save a new language model and dictionary.
     * For GTK UI, run kaylee.py -i g
     * To start a UI in 'continuous' listen mode, use the -c flag
     * To use a microphone other than the system default, use the -m flag
-3. Start talking
+3. Start talking!
 
-**Note:** to start Kaylee without needing to enter command line options all the
-time, copy options.json.tmp to ~/.config/kaylee/options.json and edit
-accordingly.
+**Note:** default values for command-line arguments may be specified in the
+options.json file.
 
 ### Examples
 
@@ -41,15 +40,8 @@ accordingly.
 * To run Kaylee with no UI and using a USB microphone recognized as device 2:
   `./kaylee.py -m 2`
 
-* To have Kaylee pass the matched sentence to the executed command:
-  `./kaylee.py -p`
-
-  **Explanation:** if the commands.conf contains the line:
-
-        good morning world: example_command.sh
-
-  Then three arguments, 'good', 'morning', and 'world', would get passed to
-  example_command.sh as `example_command.sh good morning world`.
+* To have Kaylee pass each word of the matched sentence as a separate argument
+  to the executed command: `./kaylee.py -p`
 
 * To run a command when a valid sentence has been detected:
   `./kaylee.py --valid-sentence-command=/path/to/command`

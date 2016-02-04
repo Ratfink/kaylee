@@ -1,7 +1,0 @@
-# commands are pars of the form:
-#     KEY: VALUE
-# KEY is the sentence to listen for
-# VALUE is the command to run when the key is spoken
-
-hello world: echo "hello world"
-start a %d minute timer: (echo {0} minute timer started && sleep {0}m && echo {0} minute timer ended) &

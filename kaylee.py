@@ -33,12 +33,13 @@ class Kaylee:
         # Load configuration
         self.config = Config()
         self.options = vars(self.config.options)
+        self.commands = self.options['commands']
 
         # Create number parser for later use
         self.number_parser = NumberParser()
 
-        # Read the commands
-        self.read_commands()
+        # Create the strings file
+        self.create_strings_file()
 
         if self.options['interface']:
             if self.options['interface'] == "g":
@@ -71,19 +72,12 @@ class Kaylee:
         self.recognizer = Recognizer(self.config)
         self.recognizer.connect('finished', self.recognizer_finished)
 
-    def read_commands(self):
-        # Read the commands file
-        file_lines = open(self.config.command_file)
+    def create_strings_file(self):
+        # Open the strings file
         strings = open(self.config.strings_file, "w")
-        for line in file_lines:
-            # Trim the white spaces
-            line = line.strip()
-            # If the line has length and the first char isn't a hash
-            if len(line) and line[0] != "#":
-                # This is a parsible line
-                (key, value) = line.split(":", 1)
-                self.commands[key.strip().lower()] = value.strip()
-                strings.write(key.strip().replace('%d', '') + "\n")
+        # Add command words to the corpus
+        for voice_cmd in sorted(self.commands.keys()):
+            strings.write(voice_cmd.strip().replace('%d', '') + "\n")
         # Add number words to the corpus
         for word in self.number_parser.number_words:
             strings.write(word + "\n")

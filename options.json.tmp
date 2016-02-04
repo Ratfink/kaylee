@@ -1,4 +1,8 @@
 {
+    "commands": {
+        "hello world": "echo \"hello world\"",
+        "start a %d minute timer": "(echo {0} minute timer started && sleep {0}m && echo {0} minute timer ended) &"
+    },
     "continuous": false,
     "history": null,
     "microphone": null,
