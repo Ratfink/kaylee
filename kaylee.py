@@ -8,7 +8,6 @@
 from __future__ import print_function
 import sys
 import signal
-import hashlib
 import os.path
 import subprocess
 from gi.repository import GObject, GLib
