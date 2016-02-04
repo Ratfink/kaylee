@@ -114,9 +114,10 @@ class Kaylee:
         numt, nums = self.number_parser.parse_all_numbers(t)
         # Is there a matching command?
         if t in self.commands:
-            # Run the valid_sentence_command if there is a valid sentence command
+            # Run the valid_sentence_command if it's set
             if self.options['valid_sentence_command']:
-                subprocess.call(self.options['valid_sentence_command'], shell=True)
+                subprocess.call(self.options['valid_sentence_command'],
+                                shell=True)
             cmd = self.commands[t]
             # Should we be passing words?
             if self.options['pass_words']:
@@ -124,9 +125,10 @@ class Kaylee:
             self.run_command(cmd)
             self.log_history(text)
         elif numt in self.commands:
-            # Run the valid_sentence_command if there is a valid sentence command
+            # Run the valid_sentence_command if it's set
             if self.options['valid_sentence_command']:
-                subprocess.call(self.options['valid_sentence_command'], shell=True)
+                subprocess.call(self.options['valid_sentence_command'],
+                                shell=True)
             cmd = self.commands[numt]
             cmd = cmd.format(*nums)
             # Should we be passing words?
@@ -135,9 +137,10 @@ class Kaylee:
             self.run_command(cmd)
             self.log_history(text)
         else:
-            # Run the invalid_sentence_command if there is an invalid sentence command
+            # Run the invalid_sentence_command if it's set
             if self.options['invalid_sentence_command']:
-                subprocess.call(self.options['invalid_sentence_command'], shell=True)
+                subprocess.call(self.options['invalid_sentence_command'],
+                                shell=True)
             print("no matching command {0}".format(t))
         # If there is a UI and we are not continuous listen
         if self.ui:
