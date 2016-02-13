@@ -5,7 +5,6 @@
 # Copyright 2015-2016 Clayton G. Hobbs
 # Portions Copyright 2013 Jezra
 
-from __future__ import print_function
 import sys
 import signal
 import os.path
