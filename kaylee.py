@@ -11,12 +11,12 @@ import signal
 import os.path
 import subprocess
 from gi.repository import GObject, GLib
-import json
 
 from recognizer import Recognizer
 from config import Config
 from languageupdater import LanguageUpdater
 from numberparser import NumberParser
+from hasher import Hasher
 
 
 class Kaylee:
@@ -27,8 +27,6 @@ class Kaylee:
         ui_continuous_listen = False
         self.continuous_listen = False
 
-        self.commands = {}
-
         # Load configuration
         self.config = Config()
         self.options = vars(self.config.options)
@@ -37,8 +35,11 @@ class Kaylee:
         # Create number parser for later use
         self.number_parser = NumberParser()
 
+        # Create a hasher
+        self.hasher = Hasher(self.config)
+
         # Create the strings file
-        self.create_strings_file()
+        self.update_strings_file_if_changed()
 
         if self.options['interface']:
             if self.options['interface'] == "g":
@@ -70,6 +71,23 @@ class Kaylee:
         # Create the recognizer
         self.recognizer = Recognizer(self.config)
         self.recognizer.connect('finished', self.recognizer_finished)
+
+    def update_voice_commands_if_changed(self):
+        """Use hashes to test if the voice commands have changed"""
+        stored_hash = self.hasher['voice_commands']
+
+        # Calculate the hash the voice commands have right now
+        hasher = self.hasher.get_hash_object()
+        for voice_cmd in self.commands.keys():
+            hasher.update(voice_cmd.encode('utf-8'))
+            # Add a separator to avoid odd behavior
+            hasher.update('\n'.encode('utf-8'))
+        new_hash = hasher.hexdigest()
+
+        if new_hash != stored_hash:
+            self.create_strings_file()
+            self.hasher['voice_commands'] = new_hash
+            self.hasher.store()
 
     def create_strings_file(self):
         # Open the strings file

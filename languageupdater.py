@@ -3,16 +3,17 @@
 # Copyright 2015-2016 Clayton G. Hobbs
 # Portions Copyright 2013 Jezra
 
-import hashlib
-import json
 import re
 
 import requests
+
+from hasher import Hasher
 
 class LanguageUpdater:
 
     def __init__(self, config):
         self.config = config
+        self.hasher = Hasher(config)
 
     def update_language_if_changed(self):
         """Test if the language has changed, and if it has, update it"""
@@ -21,18 +22,11 @@ class LanguageUpdater:
             self.save_language_hash()
 
     def language_has_changed(self):
-        """Use SHA256 hashes to test if the language has changed"""
-        # Load the stored hash from the hash file
-        try:
-            with open(self.config.hash_file, 'r') as f:
-                hashes = json.load(f)
-            self.stored_hash = hashes['language']
-        except (IOError, KeyError, TypeError):
-            # No stored hash
-            self.stored_hash = ''
+        """Use hashes to test if the language has changed"""
+        self.stored_hash = self.hasher['language']
 
         # Calculate the hash the language file has right now
-        hasher = hashlib.sha256()
+        hasher = self.hasher.get_hash_object()
         with open(self.config.strings_file, 'rb') as sfile:
             buf = sfile.read()
             hasher.update(buf)
@@ -75,9 +69,8 @@ class LanguageUpdater:
         self._download_file(dic_url, self.config.dic_file)
 
     def save_language_hash(self):
-        new_hashes = {'language': self.new_hash}
-        with open(self.config.hash_file, 'w') as f:
-            json.dump(new_hashes, f)
+        self.hasher['language'] = self.new_hash
+        self.hasher.store()
 
     def _download_file(self, url, path):
         r = requests.get(url, stream=True)

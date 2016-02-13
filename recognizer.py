@@ -15,7 +15,8 @@ Gst.init(None)
 
 class Recognizer(GObject.GObject):
     __gsignals__ = {
-        'finished' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_STRING,))
+        'finished' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE,
+                      (GObject.TYPE_STRING,))
     }
 
     def __init__(self, config):
