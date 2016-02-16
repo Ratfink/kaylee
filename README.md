@@ -7,7 +7,8 @@ but adds a lot of features that go beyond the original purpose of Blather.
 
 ## Requirements
 
-1. pocketsphinx
+1. Python 3 (tested with 3.5, may work with older versions)
+1. pocketsphinx 5prealpha
 2. gstreamer-1.0 (and what ever plugin has pocketsphinx support)
 3. gstreamer-1.0 base plugins (required for ALSA)
 4. python-gobject (required for GStreamer and the GTK-based UI)

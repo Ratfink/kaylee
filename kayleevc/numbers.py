@@ -1,10 +1,9 @@
 #!/usr/bin/env python
-# numberparser.py - Translate words to decimal
-
 # This is part of Kaylee
 # -- this code is licensed GPLv3
 # Copyright 2015-2016 Clayton G. Hobbs
 # Portions Copyright 2013 Jezra
+
 import re
 
 # Define the mappings from words to numbers
