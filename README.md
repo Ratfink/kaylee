@@ -19,7 +19,7 @@ but adds a lot of features that go beyond the original purpose of Blather.
 
 ## Usage
 
-1. Move options.json.tmp to ~/.config/kaylee/options.json and fill the
+1. Copy options.json.tmp to ~/.config/kaylee/options.json and fill the
    "commands" section of the file with sentences to speak and commands to run.
 2. Run kaylee.py.  This will generate ~/.local/share/kaylee/sentences.corpus
    based on sentences in the "commands" section of options.json, then use the
