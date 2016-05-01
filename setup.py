@@ -5,7 +5,7 @@ with open("README.rst") as file:
 
 setup(
     name = "KayleeVC",
-    version = "0.1.0",
+    version = "0.1.1",
     author = "Clayton G. Hobbs",
     author_email = "clay@lakeserv.net",
     description = ("Somewhat fancy voice command recognition software"),
