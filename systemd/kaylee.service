@@ -1,0 +1,8 @@
+[Unit]
+Description=Somewhat fancy voice command recognition software
+
+[Service]
+ExecStart=/usr/bin/kaylee
+
+[Install]
+WantedBy=default.target
