@@ -13,6 +13,7 @@ import requests
 
 from gi.repository import GLib
 
+
 class Config:
     """Keep track of the configuration of Kaylee"""
     # Name of the program, for later use
@@ -93,6 +94,7 @@ class Config:
             # Make an empty options namespace
             self.options = Namespace()
 
+
 class Hasher:
     """Keep track of hashes for Kaylee"""
 
@@ -122,6 +124,7 @@ class Hasher:
         """Store the current hashes into a the hash file"""
         with open(self.config.hash_file, 'w') as f:
             json.dump(self.hashes, f)
+
 
 class LanguageUpdater:
     """

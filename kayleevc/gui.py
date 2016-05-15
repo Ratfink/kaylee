@@ -10,9 +10,11 @@ from gi.repository import GObject
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk
 
+
 class GTKTrayInterface(GObject.GObject):
     __gsignals__ = {
-        'command' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_STRING,))
+        'command' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE,
+                     (GObject.TYPE_STRING,))
     }
     idle_text = "Kaylee - Idle"
     listening_text = "Kaylee - Listening"
@@ -106,9 +108,11 @@ class GTKTrayInterface(GObject.GObject):
     def set_icon_inactive(self):
         self.statusicon.set_from_file(self.icon_inactive)
 
+
 class GTKInterface(GObject.GObject):
     __gsignals__ = {
-        'command' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_STRING,))
+        'command': (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE,
+                    (GObject.TYPE_STRING,))
     }
 
     def __init__(self, args, continuous):

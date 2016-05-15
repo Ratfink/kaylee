@@ -6,8 +6,10 @@
 
 import re
 
-# Define the mappings from words to numbers
+
 class NumberParser:
+    """Parses integers from English strings"""
+
     zero = {
         'zero': 0
     }
@@ -81,12 +83,7 @@ class NumberParser:
             self.number_words.append(word)
 
     def parse_number(self, text_line):
-        """
-        Parse numbers from natural language into ints
-
-        TODO: Throw more exceptions when invalid numbers are detected.  Only
-        allow certian valueless words within numbers.  Support zero.
-        """
+        """Parse a number from English into an int"""
         value = 0
         partial_value = 0
         last_list = None
@@ -136,6 +133,13 @@ class NumberParser:
         return value
 
     def parse_all_numbers(self, text_line):
+        """
+        Parse all numbers from English to ints
+
+        Returns a tuple whose first element is text_line with all English
+        numbers replaced with "%d", and whose second element is a list
+        containing all the parsed numbers as ints.
+        """
         nums = []
         t_numless = ''
 
@@ -167,6 +171,7 @@ class NumberParser:
         t_numless += ' '.join(text_words[last_end:])
 
         return (t_numless.strip(), nums)
+
 
 if __name__ == '__main__':
     np = NumberParser()
