@@ -28,7 +28,8 @@ setup(
     install_requires=["requests"],
     data_files = [
         ("/usr/share/kaylee", ["data/icon_inactive.png", "data/icon.png",
-            "options.json.tmp"])
+            "options.json.tmp"]),
+        ("/usr/lib/systemd/user", ["systemd/kaylee.service"])
     ],
     entry_points = {
         "console_scripts": [
