@@ -25,7 +25,6 @@ class Config:
     data_dir = os.path.join(GLib.get_user_data_dir(), program_name)
 
     # Configuration files
-    command_file = os.path.join(conf_dir, "commands.conf")
     opt_file = os.path.join(conf_dir, "options.json")
 
     # Cache files
