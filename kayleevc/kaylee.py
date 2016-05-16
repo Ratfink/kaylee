@@ -19,7 +19,6 @@ class Kaylee:
     def __init__(self):
         self.ui = None
         self.options = {}
-        ui_continuous_listen = False
         self.continuous_listen = False
 
         # Load configuration
@@ -177,6 +176,7 @@ class Kaylee:
             self.quit()
 
     def load_resource(self, string):
+        # TODO: Use the Config object for this path management
         local_data = os.path.join(os.path.dirname(__file__), '..', 'data')
         paths = ["/usr/share/kaylee/", "/usr/local/share/kaylee", local_data]
         for path in paths:
@@ -202,6 +202,5 @@ def run():
     try:
         main_loop.run()
     except:
-        print("time to quit")
         main_loop.quit()
         sys.exit()
