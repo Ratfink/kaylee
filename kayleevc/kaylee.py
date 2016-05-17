@@ -47,11 +47,11 @@ class Kaylee:
             self.ui = UI(self.options, self.options['continuous'])
             self.ui.connect("command", self.process_command)
             # Can we load the icon resource?
-            icon = self.load_resource("icon.png")
+            icon = self.load_resource("icon_small.png")
             if icon:
                 self.ui.set_icon_active_asset(icon)
             # Can we load the icon_inactive resource?
-            icon_inactive = self.load_resource("icon_inactive.png")
+            icon_inactive = self.load_resource("icon_inactive_small.png")
             if icon_inactive:
                 self.ui.set_icon_inactive_asset(icon_inactive)
 
