@@ -1,8 +1,8 @@
 Kaylee
 ======
 
-Kaylee is a somewhat fancy speech recognizer that will run commands and
-perform other functions when a user speaks loosely preset sentences. It
+Kaylee is a somewhat fancy speech recognizer that runs commands and
+performs other functions when a user speaks loosely preset sentences. It
 is based on `Blather <https://gitlab.com/jezra/blather>`__ by
 `Jezra <http://www.jezra.net/>`__, but adds a lot of features that go
 beyond the original purpose of Blather.
@@ -26,15 +26,15 @@ Usage
 1. Copy options.json.tmp to ~/.config/kaylee/options.json and fill the
    "commands" section of the file with sentences to speak and commands
    to run.
-2. Run kaylee.py. This will generate
-   ~/.local/share/kaylee/sentences.corpus based on sentences in the
-   "commands" section of options.json, then use the `Sphinx Knowledge
-   Base Tool <http://www.speech.cs.cmu.edu/tools/lmtool.html>`__ to
-   create and save a new language model and dictionary.
+2. Run Kaylee with ``./kaylee.py``. This generates a language model and
+   dictionary using the `Sphinx Knowledge Base Tool
+   <http://www.speech.cs.cmu.edu/tools/lmtool.html>`__, then listens for
+   commands with the system default microphone.
 
-   -  For GTK UI, run kaylee.py -i g
-   -  To start a UI in 'continuous' listen mode, use the -c flag
-   -  To use a microphone other than the system default, use the -m flag
+   -  For the GTK UI, run ``./kaylee.py -i g``.
+   -  To start a UI in 'continuous' listen mode, use the ``-c`` flag.
+   -  To use a microphone other than the system default, use the ``-m``
+      flag.
 
 3. Start talking!
 
