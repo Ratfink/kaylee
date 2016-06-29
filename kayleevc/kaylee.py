@@ -91,7 +91,8 @@ class Kaylee:
                 strings.write(voice_cmd.strip().replace('%d', '') + "\n")
             # Add number words to the corpus
             for word in self.number_parser.number_words:
-                strings.write(word + "\n")
+                strings.write(word + " ")
+            strings.write("\n")
 
     def log_history(self, text):
         if self.options['history']:
